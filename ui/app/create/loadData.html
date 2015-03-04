@@ -1,0 +1,36 @@
+<div class="create" ng-show="model.user.authenticated">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <h2 class="col-sm-10">Load Data</h2>
+  </div>
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Topic</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" placeholder="topic to search for" ng-model="model.topicAndSentiment.topic">
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Sentiment Word</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" ng-model="model.topicAndSentiment.sentiment" placeholder="sentiment to search for">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Sentiment Description</label>
+      <div class="col-sm-2">
+        <label class="radio-inline"><input type="radio" value="positive" ng-model="model.topicAndSentiment.posOrNeg" placeholder="">Positive</label>
+      </div>
+      <div class="col-sm-2">
+        <label class="radio-inline"><input type="radio" value="negative" ng-model="model.topicAndSentiment.posOrNeg" placeholder="">Negative</label>
+      </div>
+    </div>
+
+    <div class="row">
+      <a class="col-sm-offset-9 col-sm-1" href="/">Cancel</a>
+      <button class="col-sm-2 btn btn-primary" ng-click="submit()">Submit</button>
+    </div>
+  </form>
+</div>

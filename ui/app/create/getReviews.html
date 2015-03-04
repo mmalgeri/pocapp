@@ -1,0 +1,19 @@
+<div class="create" ng-show="model.user.authenticated">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <h2 class="col-sm-10">Load Data</h2>
+  </div>
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Movie</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" placeholder="movie to search for" ng-model="model.movieData.movie">
+      </div>
+    </div>
+
+    <div class="row">
+      <a class="col-sm-offset-9 col-sm-1" href="/">Cancel</a>
+      <button class="col-sm-2 btn btn-primary" ng-click="submit()">Submit</button>
+    </div>
+  </form>
+</div>

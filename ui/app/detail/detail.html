@@ -1,0 +1,7 @@
+<div class="row detail">
+  <!-- display JSON data -->
+ <json-explorer json-data="{{model.detail}}" ng-if="model.dataType == 'json'"></json-explorer> 
+ <pre ng-if="model.dataType == 'xml'"> {{model.detail}} </pre>
+ 
+
+</div>
