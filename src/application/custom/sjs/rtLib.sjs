@@ -64,6 +64,7 @@ var actorArray = new Array();
     for (j=0; j<movieCast.length; j++) {
       
       var actor = movieCast[j];
+      actor['movidId'] = id;
       actorArray.push(actor);
     }
   return actorArray;

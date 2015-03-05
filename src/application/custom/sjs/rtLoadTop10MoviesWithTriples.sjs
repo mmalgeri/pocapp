@@ -54,7 +54,7 @@ function addDBPediaInfo (dataWithRtTriplesIn) {
 
 
 //This function inserts each movie into DB after adding the rank and date info
-function rtLoadTop10Movies(movieArray) {
+function rtLoadTop10MoviesWithTriples(movieArray) {
   
   movieArray = movieArray.toObject();
   for (i = 0; i < 10 ; i++){
@@ -79,7 +79,7 @@ function rtLoadTop10Movies(movieArray) {
 }
 
 var topTen = rtLib.rtGetTop10Movies();
-rtLoadTop10Movies(topTen);
+rtLoadTop10MoviesWithTriples(topTen);
 
 xdmp.setResponseContentType("text/html");
 "<HTML>Done loading top 10 movies with triples</HTML>"
