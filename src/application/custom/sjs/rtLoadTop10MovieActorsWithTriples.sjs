@@ -62,7 +62,7 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
       actor = addIdInfo(actor, ids[i],movies[i]);
       actor = addTriples(actor, ids[i],movies[i]);
       
-      var docName = fn.concat('actor-',actor.id,'-',ids[i],'.json');
+      var docName = fn.concat('actors-',actor.id,'-',ids[i],'.json');
       //return actor;
       xdmp.documentInsert(docName ,actor, xdmp.defaultPermissions(),"actor");
     }

@@ -6,10 +6,10 @@ import module namespace spq = "http://www.w3.org/TR/sparql11-protocol/" at "/app
 declare namespace sparql = "http://www.w3.org/2005/sparql-results#";
 declare namespace dbpprop = "http://dbpedia.org/property/";
 
-declare function pocappLib:getInfo()
+declare function pocappLib:getInfo($term as xs:string)
 {
 
-let $searchTerm := "The_Princess_Bride"
+let $searchTerm := fn:concat(xdmp:url-encode($term), "_(film)")
 
 let $query := fn:concat("SELECT * 
 WHERE
@@ -18,10 +18,12 @@ WHERE
   
 }")
 
-let $stuff := spq:query('http://dbpedia.org/sparql', 'http://dbpedia.org', (),$query)
-let $morestuff := $stuff
+let $results := spq:query('http://dbpedia.org/sparql', 'http://dbpedia.org', (),$query, $spq:SPARQL_RESULTS_XML)
 
-return $morestuff//sparql:result
+return $results//sparql:result
+
+
+
 };
 
 
