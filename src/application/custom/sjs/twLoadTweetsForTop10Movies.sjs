@@ -53,6 +53,8 @@ function twLoadTweetsForTop10Movies (tAndI, accessId) {
    tweetCount = tweetPackage.search_metadata.count;
     
     for (j=0; j < tweetCount; j++) {
+
+      try {
       aTweet = tweetPackage.statuses[j].text;
       aTweet = xdmp.urlEncode(aTweet);
       
@@ -65,6 +67,11 @@ function twLoadTweetsForTop10Movies (tAndI, accessId) {
       date = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
       docName = fn.concat("tweet-movie-",movieId,"-",date,"-",j,".json");
       xdmp.documentInsert(docName ,aTweetObj, xdmp.defaultPermissions(),"tweets-movies");
+      }
+      catch(err) {
+        xdmp.log("tweet error");
+        continue;
+      }
     }
   }
   return "Done inserting tweets for movies";

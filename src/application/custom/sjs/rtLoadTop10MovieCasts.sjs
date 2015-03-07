@@ -14,7 +14,7 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
   for (i=0; i<10; i++) {
     var uri = fn.concat("http://api.rottentomatoes.com/api/public/v1.0/movies/",ids[i],"/cast.json?apikey=",apikey);
     var movieInfoItr = xdmp.httpGet(uri, {format:'json'});
-    xdmp.sleep(200);
+    xdmp.sleep(250);
   
     var movieInfo = movieInfoItr.next();
     movieInfo = movieInfoItr.next();

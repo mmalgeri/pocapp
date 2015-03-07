@@ -64,7 +64,7 @@ var actorArray = new Array();
     for (j=0; j<movieCast.length; j++) {
       
       var actor = movieCast[j];
-      actor['movidId'] = id;
+      actor['movieId'] = id;
       actorArray.push(actor);
     }
   return actorArray;
@@ -78,7 +78,7 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
 
 var uri = fn.concat("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=",apikey)
 var movieInfoItr = xdmp.httpGet(uri, {format:'json'})
-xdmp.sleep(200);
+xdmp.sleep(250);
     
 
 // Need to move movieItr twice to get to movielist
@@ -111,13 +111,38 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
 
     var uri = fn.concat("http://api.rottentomatoes.com/api/public/v1.0/movies/",id,"/reviews.json?apikey=",apikey);
     var movieReviewItr = xdmp.httpGet(uri, {format:'json'});
-    xdmp.sleep(200);
+    xdmp.sleep(250);
   
   
     var movieReview = movieReviewItr.next();
     movieReview = movieReviewItr.next();
     var movieReview = movieReview.value;
     return movieReview;
+}
+
+exports.rtGetTopMovieActors = function rtGetTopMovieActors( movieIds ) {
+var apikey = "ek43fd5d4pgnkr44m24de9wr";
+var actorArray = new Array();
+  
+  for (i = 0; i<movieIds.length; i++) {
+  
+    var uri = fn.concat("http://api.rottentomatoes.com/api/public/v1.0/movies/",movieIds[i],"/cast.json?apikey=",apikey);
+    var movieInfoItr = xdmp.httpGet(uri, {format:'json'});
+    xdmp.sleep(250);
+  
+    var movieInfo = movieInfoItr.next();
+    movieInfo = movieInfoItr.next();
+    var movieCast = movieInfo.value.toObject().cast;
+    
+    //for (j=0; j<movieCast.length; j++) {
+    for (j=0; j<5; j++) { // just use top 5 actors in a movie
+      
+      var actor = movieCast[j];
+      actor['movieId'] = movieIds[i];
+      actorArray.push(actor);
+    }
+  }
+  return actorArray;
 }
 
 

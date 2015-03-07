@@ -9,7 +9,7 @@ declare namespace dbpprop = "http://dbpedia.org/property/";
 declare function pocappLib:getInfo($term as xs:string)
 {
 
-let $searchTerm := fn:concat(xdmp:url-encode($term), "_(film)")
+let $searchTerm := xdmp:url-encode($term)
 
 let $query := fn:concat("SELECT * 
 WHERE
@@ -20,7 +20,9 @@ WHERE
 
 let $results := spq:query('http://dbpedia.org/sparql', 'http://dbpedia.org', (),$query, $spq:SPARQL_RESULTS_XML)
 
-return $results//sparql:result
+let $numresults := fn:count($results//sparql:result)
+
+return ($results//sparql:result, $numresults)
 
 
 

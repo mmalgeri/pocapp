@@ -33,8 +33,7 @@ function twLoadTweetsForTop10Actors (aArray, accessId) {
   var date;
   accessId = "Bearer " + accessId;
   
-  //for (i = 0; i < aArray.length; i++) 
-  for (i = 0; i < 5; i++){ // Only getting top 5 actors due to rate limit on Twitter
+  for (i = 0; i < aArray.length; i++) {
    query = xdmp.urlEncode(aArray[i].name);
    actorId = aArray[i].id;
   
@@ -64,7 +63,8 @@ function twLoadTweetsForTop10Actors (aArray, accessId) {
      
 
     for (j=0; j < tweetCount; j++) {
-      
+
+      try {
       aTweet = tweetPackage.statuses[j].text;
       aTweet = xdmp.urlEncode(aTweet);
       
@@ -77,11 +77,14 @@ function twLoadTweetsForTop10Actors (aArray, accessId) {
       date = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
       docName = fn.concat("tweet-actor-",actorId,"-",date,"-",j,".json");
       xdmp.documentInsert(docName ,aTweet, xdmp.defaultPermissions(),"tweets-actors");
-   
+      }
+      catch(err){
+        xdmp.log ("error in tweet");
+        continue;
+      }
     }
-
   }
-  return "Done inserting tweets for top 5 actors";
+  return "Done inserting tweets for top actors";
 }
 
 var rtLib = require("/application/custom/sjs/rtLib.sjs");
