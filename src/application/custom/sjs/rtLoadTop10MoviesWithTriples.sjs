@@ -1,7 +1,7 @@
 declareUpdate();
 var rtLib = require("/application/custom/sjs/rtLib.sjs");
 
-// This function adds the date the movie was in Top 10 and its rank at that time
+// Adds the date the movie was in Top 10 and its rank at that time
 function addRankInfo( aMovie, rank, id) {
   
   aMovie['dateInTop'] = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
@@ -43,10 +43,10 @@ function addRtTriples (dataIn) {
 
 }
 
-function addDbpediaTriples (dataWithRtTriplesIn) {
+function addDbpediaTriples (dataWithRtTriplesIn, name) {
   
-  var getDBPedia = require("/application/xquery/getDBPediaInfo.xqy");
-  var dbTriples = getDBPedia["getInfo"]();
+  var getDBPedia = require("/application/xquery/getDBPediaMovieInfo.xqy");
+  var dbTriples = getDBPedia.getDBPediaMovieInfo (name);
   dataWithRtTriplesIn.dbpTriples = dbTriples;
   return dataWithRtTriplesIn;
   
@@ -65,14 +65,16 @@ function rtLoadTop10MoviesWithTriples(movieArray) {
     var date = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
     var docName = fn.concat('movie-',i+1,'-',date,'-',movieId,'.json');
     
+    var movieName = movie.title;
+    
     var data = addRankInfo(movie,i+1, movieId);
     var dataWithRtTriples = addRtTriples(data);
     
-    //var dataWithRtTriplesAndDbpediaTriples = addDbpediaTriples(dataWithRtTriples);
-    //return dataWithRtTriplesAndDbpediaTriples;
+    var dataWithRtTriplesAndDbpediaTriples = addDbpediaTriples(dataWithRtTriples, movieName);
     
-    xdmp.documentInsert(docName ,dataWithRtTriples, xdmp.defaultPermissions(),"top10");
+    xdmp.documentInsert(docName ,dataWithRtTriplesAndDbpediaTriples, xdmp.defaultPermissions(),"top10");
   }
+      //return dataWithRtTriplesAndDbpediaTriples;
   
 }
 

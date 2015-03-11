@@ -38,18 +38,11 @@ function addRtTriples (aActor, id, movie) {
 function addDbpediaTriples (actorWithRtTriples) {
   
   var getDBPedia = require("/application/xquery/getDBPediaActorInfo.xqy");
-  // need to tokenize actor and send in something like "Tom_Cruise"
   var actorName = actorWithRtTriples.name;
   var dBPTriples = getDBPedia.getDBPediaActorInfo(actorName);
 
-  // Format results from DBPedia into JSON Triples and load into array
-  var dbpTripleArray = new Array();
-  var dbpTriple = sem.triple(sem.iri(actorName), sem.iri("hasId"), id);
-  dbpTripleArray.push(dbpTriple);
-
-
   var actorWithRtAndDBPTriples = actorWithRtTriples;
-  actorWithRtAndDBPTriples.dbpTriples = dbpTripleArray;
+  actorWithRtAndDBPTriples.dbpTriples = dBPTriples;
   return actorWithRtAndDBPTriples;
   
 }
@@ -60,7 +53,7 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
   for (i=0; i<10; i++) {
     var uri = fn.concat("http://api.rottentomatoes.com/api/public/v1.0/movies/",ids[i],"/cast.json?apikey=",apikey);
     var movieInfoItr = xdmp.httpGet(uri, {format:'json'});
-    xdmp.sleep(250);
+    xdmp.sleep(205);
   
     var movieInfo = movieInfoItr.next();
     movieInfo = movieInfoItr.next();
@@ -74,8 +67,7 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
       actor = addDbpediaTriples(actor);
       
       var docName = fn.concat('actors-',actor.id,'-',ids[i],'.json');
-      return actor;
-      //xdmp.documentInsert(docName ,actor, xdmp.defaultPermissions(),"actor");
+      xdmp.documentInsert(docName ,actor, xdmp.defaultPermissions(),"actor");
     }
   }
 }
@@ -85,5 +77,5 @@ var topTenIds = rtLib.rtGetTop10MovieIds();
 var topTenMovies = rtLib.rtGetTop10Movies();
 rtLoadTopMovieActorsWithTriples(topTenIds, topTenMovies);
 
-//xdmp.setResponseContentType("text/html");
-//"<HTML>Done loading top 10 movie actors</HTML>"
+xdmp.setResponseContentType("text/html");
+"<HTML>Done loading top 10 movie actors</HTML>"
