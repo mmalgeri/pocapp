@@ -1,4 +1,11 @@
-var getDBPedia = require("/application/xquery/getDBPediaInfo.xqy");
-var res = getDBPedia.getInfo("The_Princess_Bride");
-var resArray = res.toArray();
+
+var pocappLib = require("/application/xquery/getDBPediaActorInfo.xqy");
+var res = pocappLib.getDBPediaActorInfo("Tom Cruise");
 res;
+
+
+/*
+var pocappLib = require("/application/xquery/getDBPediaMovieInfo.xqy");
+var res = pocappLib.getDBPediaMovieInfo("Cary_Elwes", "Wallace_Shawn", "Robin_Wright");
+res;
+*/

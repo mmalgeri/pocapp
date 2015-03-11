@@ -10,7 +10,7 @@ function addRankInfo( aMovie, rank, id) {
   return aMovie;
 }
 
-function addTriples (dataIn) {
+function addRtTriples (dataIn) {
   
   var id = dataIn.movieId;
   var synopsis = dataIn.synopsis;
@@ -43,7 +43,7 @@ function addTriples (dataIn) {
 
 }
 
-function addDBPediaInfo (dataWithRtTriplesIn) {
+function addDbpediaTriples (dataWithRtTriplesIn) {
   
   var getDBPedia = require("/application/xquery/getDBPediaInfo.xqy");
   var dbTriples = getDBPedia["getInfo"]();
@@ -53,7 +53,8 @@ function addDBPediaInfo (dataWithRtTriplesIn) {
 }
 
 
-//This function inserts each movie into DB after adding the rank and date info
+// Inserts each movie into DB after adding the rank 
+// and triple info form rotten tomatoes and DBPedia
 function rtLoadTop10MoviesWithTriples(movieArray) {
   
   movieArray = movieArray.toObject();
@@ -65,13 +66,10 @@ function rtLoadTop10MoviesWithTriples(movieArray) {
     var docName = fn.concat('movie-',i+1,'-',date,'-',movieId,'.json');
     
     var data = addRankInfo(movie,i+1, movieId);
-    var dataWithRtTriples = addTriples(data);
+    var dataWithRtTriples = addRtTriples(data);
     
-    //var dataWithRtTriplesAndDBPediaInfo = addDBPediaInfo(dataWithRtTriples);
-    //return dataWithRtTriplesAndDBPediaInfo;
-    //return dataWithRtTriples;
-    
-      
+    //var dataWithRtTriplesAndDbpediaTriples = addDbpediaTriples(dataWithRtTriples);
+    //return dataWithRtTriplesAndDbpediaTriples;
     
     xdmp.documentInsert(docName ,dataWithRtTriples, xdmp.defaultPermissions(),"top10");
   }

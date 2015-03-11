@@ -9,7 +9,7 @@ function addIdInfo( aActor, id, movie) {
   return aActor;
 }
 
-function addTriples (aActor, id, movie) {
+function addRtTriples (aActor, id, movie) {
   
   var id = aActor.actorId;
   var actorName = aActor.name;
@@ -35,12 +35,22 @@ function addTriples (aActor, id, movie) {
 
 }
 
-function addDBPediaInfo (dataWithRtTriplesIn) {
+function addDbpediaTriples (actorWithRtTriples) {
   
-  var getDBPedia = require("/application/xquery/getDBPediaInfo.xqy");
-  var dbTriples = getDBPedia["getInfo"]();
-  dataWithRtTriplesIn.dbpTriples = dbTriples;
-  return dataWithRtTriplesIn;
+  var getDBPedia = require("/application/xquery/getDBPediaActorInfo.xqy");
+  // need to tokenize actor and send in something like "Tom_Cruise"
+  var actorName = actorWithRtTriples.name;
+  var dBPTriples = getDBPedia.getDBPediaActorInfo(actorName);
+
+  // Format results from DBPedia into JSON Triples and load into array
+  var dbpTripleArray = new Array();
+  var dbpTriple = sem.triple(sem.iri(actorName), sem.iri("hasId"), id);
+  dbpTripleArray.push(dbpTriple);
+
+
+  var actorWithRtAndDBPTriples = actorWithRtTriples;
+  actorWithRtAndDBPTriples.dbpTriples = dbpTripleArray;
+  return actorWithRtAndDBPTriples;
   
 }
 
@@ -60,11 +70,12 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
       
       var actor = movieCast[j];
       actor = addIdInfo(actor, ids[i],movies[i]);
-      actor = addTriples(actor, ids[i],movies[i]);
+      actor = addRtTriples(actor, ids[i],movies[i]);
+      actor = addDbpediaTriples(actor);
       
       var docName = fn.concat('actors-',actor.id,'-',ids[i],'.json');
-      //return actor;
-      xdmp.documentInsert(docName ,actor, xdmp.defaultPermissions(),"actor");
+      return actor;
+      //xdmp.documentInsert(docName ,actor, xdmp.defaultPermissions(),"actor");
     }
   }
 }
@@ -74,5 +85,5 @@ var topTenIds = rtLib.rtGetTop10MovieIds();
 var topTenMovies = rtLib.rtGetTop10Movies();
 rtLoadTopMovieActorsWithTriples(topTenIds, topTenMovies);
 
-xdmp.setResponseContentType("text/html");
-"<HTML>Done loading top 10 movie actors</HTML>"
+//xdmp.setResponseContentType("text/html");
+//"<HTML>Done loading top 10 movie actors</HTML>"
