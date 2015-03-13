@@ -60,7 +60,7 @@ function twLoadTweetsForTop10Movies (tAndI, accessId) {
       
       query = query.replace(/\+/g, " ");
       aTweetObj = aTweet.replace(/\+/g," ");
-      aTweetObj = '{ "tweet"' + ':' + '"' + aTweetObj + '"' + ',' + '"Movie ID"'+ ':' + '"' + movieId + '"' + ',' + '"Movie Name:"' + ':' + '"' + query + '"' + '}';
+      aTweetObj = '{ "tweet"' + ':' + '"' + aTweetObj + '"' + ',' + '"movieId"'+ ':' + '"' + movieId + '"' + ',' + '"movieTitle"' + ':' + '"' + query + '"' + '}';
       aTweetObj = cleanString(aTweetObj);
       aTweetObj = JSON.parse(aTweetObj);
       

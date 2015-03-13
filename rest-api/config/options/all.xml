@@ -60,20 +60,31 @@
     </search:state>
   </search:operator>
   <search:annotation xmlns="http://marklogic.com/appservices/search">Delta options here</search:annotation>
-  <search:constraint name="Topic">
+
+  <search:constraint name="Top 10 Movies">
     <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/">
       <search:facet-option>limit=25</search:facet-option>
       <search:facet-option>frequency-order</search:facet-option>
       <search:facet-option>descending</search:facet-option>
-      <search:element ns="" name="Topic"/>
+      <search:element ns="" name="movieTitle"/>
     </search:range>
   </search:constraint>
-  <search:constraint name="Sentiment">
+
+  <search:constraint name="Actors">
     <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/">
       <search:facet-option>limit=25</search:facet-option>
       <search:facet-option>frequency-order</search:facet-option>
       <search:facet-option>descending</search:facet-option>
-      <search:element ns="" name="Sentiment"/>
+      <search:element ns="" name="actorName"/>
+    </search:range>
+  </search:constraint>
+
+  <search:constraint name="Reviews from Critics">
+    <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/">
+      <search:facet-option>limit=25</search:facet-option>
+      <search:facet-option>frequency-order</search:facet-option>
+      <search:facet-option>descending</search:facet-option>
+      <search:element ns="" name="critic"/>
     </search:range>
   </search:constraint>
 

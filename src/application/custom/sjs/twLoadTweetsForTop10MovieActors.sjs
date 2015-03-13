@@ -70,7 +70,7 @@ function twLoadTweetsForTop10Actors (aArray, accessId) {
       
       query = query.replace(/\+/g, " ");
       aTweet = aTweet.replace(/\+/g, " ");
-      aTweet = '{ "tweet"' + ':' + '"' + aTweet + '"' + ',' + '"actorId"'+ ':' + '"' + actorId + '"' + ',' + '"actorName:"' + ':' + '"' + query + '"' + '}';
+      aTweet = '{ "tweet"' + ':' + '"' + aTweet + '"' + ',' + '"actorId"'+ ':' + '"' + actorId + '"' + ',' + '"actorName"' + ':' + '"' + query + '"' + '}';
       aTweet = cleanString(aTweet);
       aTweet = JSON.parse(aTweet);
       

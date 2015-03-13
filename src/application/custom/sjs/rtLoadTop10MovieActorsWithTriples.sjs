@@ -6,6 +6,7 @@ function addIdInfo( aActor, id, movie) {
   aActor['movieId'] = id;
   aActor['actorId'] = aActor.id;
   aActor['movieTitle'] = movie.title;
+  aActor['actorName'] = aActor.name;
   return aActor;
 }
 
