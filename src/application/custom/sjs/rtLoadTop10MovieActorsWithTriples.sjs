@@ -22,10 +22,8 @@ function addRtTriples (aActor, id, movie) {
   tripleArray.push(triple);
   var triple = sem.triple(sem.iri(actorName), sem.iri("appearedIn"), movieName);
   tripleArray.push(triple);
-  xdmp.log("Cast is " + cast);
   
   for (k = 0; k < cast.length; k++) {
-    xdmp.log("Array length is " + cast.length);
     triple = sem.triple(sem.iri(actorName), sem.iri("appearedWith"), cast[k].name);
     tripleArray.push(triple);
   }
@@ -47,6 +45,30 @@ function addDbpediaTriples (actorWithRtTriples) {
   
 }
 
+function addTheMovieDbTriples (anActor){
+  var rtLib = require("/application/custom/sjs/rtLib.sjs");
+  var actorName = anActor.name; 
+  var actorStuff = rtLib.getTmdbActorInfo(actorName);
+  var tmdbActorbio = actorStuff.biography;
+  var tmdbActorImdb = actorStuff.imdb_id;
+  var tmdbActorImdbUrl = "http://www.imdb.com/name/"+tmdbActorImdb;
+
+  //create triples from Tmdb;
+  var tmdbTripleArray = new Array();
+  var tmdbTriple = sem.triple(sem.iri(actorName), sem.iri("hasBio"), tmdbActorbio);
+  tmdbTripleArray.push(tmdbTriple);
+  tmdbTriple = sem.triple(sem.iri(actorName), sem.iri("hasImdbId"), tmdbActorImdb);
+  tmdbTripleArray.push(tmdbTriple);
+  tmdbTriple = sem.triple(sem.iri(actorName), sem.iri("hasImdbIdUrl"), tmdbActorImdbUrl);
+  tmdbTripleArray.push(tmdbTriple);
+
+  http://www.imdb.com/name/nm1663205
+  
+  anActor.tmdbTriples = tmdbTripleArray;
+  return anActor;
+
+}
+
 function rtLoadTopMovieActorsWithTriples( ids, movies ) {
 var apikey = "ek43fd5d4pgnkr44m24de9wr";
 
@@ -60,11 +82,17 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
     var movieCast = movieInfo.value.toObject().cast;
     
     for (j=0; j<movieCast.length; j++) {
-      
+      try {
       var actor = movieCast[j];
       actor = addIdInfo(actor, ids[i],movies[i]);
       actor = addRtTriples(actor, ids[i],movies[i]);
       actor = addDbpediaTriples(actor);
+      actor = addTheMovieDbTriples(actor);
+      }
+      catch(err){
+        xdmp.log ("error in adding info and triples" + err);
+        continue;
+      }
       
       var docName = fn.concat('actors-',actor.id,'-',ids[i],'.json');
       xdmp.documentInsert(docName ,actor, xdmp.defaultPermissions(),"actor");
