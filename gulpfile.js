@@ -86,3 +86,17 @@ gulp.task('server', function() {
 
 // Default Task
 gulp.task('default', ['jshint', 'less', 'scripts', 'watch']);
+
+// THE FOLLOWING TASKS WERE ADDED FOR THE POCAPP PROJECT BY MMALGERI 
+
+// Load top 10 movies with triples
+gulp.task('loadMovies', function() {
+var request = require('request');
+request("http://localhost:7020/v1/resources/getMovies", function (error, response, body) {
+  if (!error && response.statusCode == 200) {
+    console.log(body); 
+  }
+    else {console.log("There was an error " + body + response) 
+  }
+});
+});

@@ -71,15 +71,12 @@ function rtLoadTop10MoviesWithTriples(movieArray) {
     var dataWithRtTriples = addRtTriples(data);
     
     var dataWithRtTriplesAndDbpediaTriples = addDbpediaTriples(dataWithRtTriples, movieName);
+
+    xdmp.log("inserting movies with triples");
     
-    xdmp.documentInsert(docName ,dataWithRtTriplesAndDbpediaTriples, xdmp.defaultPermissions(),"top10");
-  }
-      //return dataWithRtTriplesAndDbpediaTriples;
-  
+    xdmp.documentInsert(docName ,dataWithRtTriplesAndDbpediaTriples,null,"top10");
+  }  
 }
 
 var topTen = rtLib.rtGetTop10Movies();
 rtLoadTop10MoviesWithTriples(topTen);
-
-xdmp.setResponseContentType("text/html");
-"<HTML>Done loading top 10 movies with triples</HTML>"
