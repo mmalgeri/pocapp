@@ -66,7 +66,7 @@ function twLoadTweetsForTop10Movies (tAndI, accessId) {
       
       date = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
       docName = fn.concat("tweet-movie-",movieId,"-",date,"-",j,".json");
-      xdmp.documentInsert(docName ,aTweetObj, xdmp.defaultPermissions(),"tweets-movies");
+      xdmp.documentInsert(docName ,aTweetObj, null,"tweets-movies");
       }
       catch(err) {
         xdmp.log("tweet error");
@@ -83,5 +83,4 @@ var rtLib = require("/application/custom/sjs/rtLib.sjs");
 var twLib = require("/application/custom/sjs/twLib.sjs");
 var titlesAndIds = rtLib.rtGetTop10MovieIdsAndTitles();
 var aId = twLib.twGetAccessToken();
-xdmp.setResponseContentType("text/html");
 twLoadTweetsForTop10Movies(titlesAndIds,aId);

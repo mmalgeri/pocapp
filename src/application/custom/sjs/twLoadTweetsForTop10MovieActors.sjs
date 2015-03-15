@@ -76,7 +76,7 @@ function twLoadTweetsForTop10Actors (aArray, accessId) {
       
       date = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
       docName = fn.concat("tweet-actor-",actorId,"-",date,"-",j,".json");
-      xdmp.documentInsert(docName ,aTweet, xdmp.defaultPermissions(),"tweets-actors");
+      xdmp.documentInsert(docName ,aTweet, null,"tweets-actors");
       }
       catch(err){
         xdmp.log ("error in tweet");
@@ -92,5 +92,4 @@ var twLib = require("/application/custom/sjs/twLib.sjs");
 var movieIds = rtLib.rtGetTop10MovieIds();
 var actorsAndIds = rtLib.rtGetTopMovieActors(movieIds);
 var aId = twLib.twGetAccessToken();
-xdmp.setResponseContentType("text/html");
 twLoadTweetsForTop10Actors(actorsAndIds, aId);

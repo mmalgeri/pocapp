@@ -96,7 +96,7 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
       }
       
       var docName = fn.concat('actors-',actor.id,'-',ids[i],'.json');
-      xdmp.documentInsert(docName ,actor, xdmp.defaultPermissions(),"actor");
+      xdmp.documentInsert(docName ,actor, null,"actor");
     }
   }
 }
@@ -105,6 +105,3 @@ var rtLib = require("/application/custom/sjs/rtLib.sjs");
 var topTenIds = rtLib.rtGetTop10MovieIds();
 var topTenMovies = rtLib.rtGetTop10Movies();
 rtLoadTopMovieActorsWithTriples(topTenIds, topTenMovies);
-
-xdmp.setResponseContentType("text/html");
-"<HTML>Done loading top 10 movie actors</HTML>"

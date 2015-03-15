@@ -89,14 +89,62 @@ gulp.task('default', ['jshint', 'less', 'scripts', 'watch']);
 
 // THE FOLLOWING TASKS WERE ADDED FOR THE POCAPP PROJECT BY MMALGERI 
 
-// Load top 10 movies with triples
-gulp.task('loadMovies', function() {
+// Get top 10 movies with triples
+gulp.task('getMovies', function() {
 var request = require('request');
 request("http://localhost:7020/v1/resources/getMovies", function (error, response, body) {
   if (!error && response.statusCode == 200) {
     console.log(body); 
   }
-    else {console.log("There was an error " + body + response) 
+    else {console.log("There was an error getting movies" + body + response) 
+  }
+});
+});
+
+// Get top 10 movie actors with triples
+gulp.task('getMovieActors', function() {
+var request = require('request');
+request("http://localhost:7020/v1/resources/getMovieActors", function (error, response, body) {
+  if (!error && response.statusCode == 200) {
+    console.log(body); 
+  }
+    else {console.log("There was an error getting movie actors " + body + response) 
+  }
+});
+});
+
+// Get top 10 movie reviews
+gulp.task('getMovieReviews', function() {
+var request = require('request');
+request("http://localhost:7020/v1/resources/getMovieReviews", function (error, response, body) {
+  if (!error && response.statusCode == 200) {
+    console.log(body); 
+  }
+    else {console.log("There was an error getting movie reviews " + body + response) 
+  }
+});
+});
+
+// Get top 10 movie tweets
+gulp.task('getMovieTweets', function() {
+var request = require('request');
+request("http://localhost:7020/v1/resources/getMovieTweets", function (error, response, body) {
+  if (!error && response.statusCode == 200) {
+    console.log(body); 
+  }
+    else {console.log("There was an error getting movie tweets " + body + response) 
+  }
+});
+});
+
+// Get top 10 movie actor tweets
+gulp.task('getMovieActorTweets', function() {
+var request = require('request');
+request("http://localhost:7020/v1/resources/getMovieActorTweets", function (error, response, body) {
+  if (!error && response.statusCode == 200) {
+    console.log(body); 
+  }
+    else {console.log("There was an error getting movie actor tweets " + body + response) 
   }
 });
 });

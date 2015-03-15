@@ -25,7 +25,7 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
     
     var docName = fn.concat('movie-reviews-',ids[i],'.json');
     
-    xdmp.documentInsert(docName ,movieReviews, xdmp.defaultPermissions(),"review");
+    xdmp.documentInsert(docName ,movieReviews, null,"review");
 
 
   }
@@ -35,6 +35,3 @@ var rtLib = require("/application/custom/sjs/rtLib.sjs");
 var topTenIds = rtLib.rtGetTop10MovieIds();
 var topTenMovies = rtLib.rtGetTop10Movies();
 rtInsertTopMovieReviews(topTenIds, topTenMovies);
-
-xdmp.setResponseContentType("text/html");
-"<HTML>Done loading top 10 movie reviews</HTML>"
