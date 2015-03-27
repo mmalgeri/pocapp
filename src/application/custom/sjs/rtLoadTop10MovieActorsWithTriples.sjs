@@ -14,6 +14,7 @@ function addRtTriples (aActor, id, movie) {
   
   var id = aActor.actorId;
   var actorName = aActor.name;
+
   var movieName = movie.title;
   var cast = movie.abridged_cast;
   cast = cast.toObject();
@@ -21,12 +22,22 @@ function addRtTriples (aActor, id, movie) {
   var tripleArray = new Array();
   var triple = sem.triple(sem.iri(actorName), sem.iri("hasId"), id);
   tripleArray.push(triple);
-  var triple = sem.triple(sem.iri(actorName), sem.iri("appearedIn"), movieName);
+  var triple = sem.triple(sem.iri(actorName), sem.iri("http://www.w3.org/2000/01/rdf-schema#label"), actorName);
+  tripleArray.push(triple);
+  triple = sem.triple(sem.iri(actorName), sem.iri("appearedIn"), movieName);
+  tripleArray.push(triple);
+  triple = sem.triple(sem.iri(actorName), sem.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), sem.iri("http://dbpedia.org/ontology/Actor"));
   tripleArray.push(triple);
   
   for (k = 0; k < cast.length; k++) {
+    try {
     triple = sem.triple(sem.iri(actorName), sem.iri("appearedWith"), cast[k].name);
     tripleArray.push(triple);
+    }
+    catch(err){
+        xdmp.log ("error in adding info and triples to actors " + err);
+        continue;
+      }
   }
   aActor.rtTriples = tripleArray;
 
@@ -87,11 +98,13 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
       var actor = movieCast[j];
       actor = addIdInfo(actor, ids[i],movies[i]);
       actor = addRtTriples(actor, ids[i],movies[i]);
-      actor = addDbpediaTriples(actor);
       actor = addTheMovieDbTriples(actor);
+      actor = addDbpediaTriples(actor);
       }
       catch(err){
-        xdmp.log ("error in adding info and triples" + err);
+        xdmp.log ("error in adding info and triples " + err);
+        var docName = fn.concat('actors-',actor.id,'-',ids[i],'.json');
+        xdmp.documentInsert(docName ,actor, null,"actor");
         continue;
       }
       

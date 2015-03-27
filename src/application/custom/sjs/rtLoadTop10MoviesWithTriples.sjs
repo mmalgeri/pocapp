@@ -23,19 +23,35 @@ function addRtTriples (dataIn) {
   var tripleArray = new Array();
   var triple = sem.triple(sem.iri(movieName), sem.iri("hasRating"), rating);
   tripleArray.push(triple);
+  triple = sem.triple(sem.iri(movieName), sem.iri("http://www.w3.org/2000/01/rdf-schema#label"), movieName);
+  tripleArray.push(triple);
   triple = sem.triple(sem.iri(movieName), sem.iri("hasReleaseDate"), release);
   tripleArray.push(triple);
   triple = sem.triple(sem.iri(movieName), sem.iri("hasId"), id);
   tripleArray.push(triple);
   triple = sem.triple(sem.iri(movieName), sem.iri("hasSynopsis"), synopsis);
   tripleArray.push(triple);
+  triple = sem.triple(sem.iri(movieName), sem.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), sem.iri("http://dbpedia.org/ontology/Film"));
+  tripleArray.push(triple);
   for (j = 0; j < 5; j++) {
+    try {
     triple = sem.triple(sem.iri(movieName), sem.iri("hasReview"), revs.reviews[j].links.review);
     tripleArray.push(triple);
+    }
+    catch(err){
+        xdmp.log ("error in adding info and triples to movies " + err);
+        continue;
+      }
   }
   for (k = 0; k < cast.length; k++) {
+    try {
     triple = sem.triple(sem.iri(movieName), sem.iri("hasCastMember"), cast[k].name);
     tripleArray.push(triple);
+    }
+    catch(err){
+        xdmp.log ("error in adding cast info and triples to movie" + err);
+        continue;
+      }
   }
   dataIn.rtTriples = tripleArray;
 
@@ -59,7 +75,8 @@ function rtLoadTop10MoviesWithTriples(movieArray) {
   
   movieArray = movieArray.toObject();
   for (i = 0; i < 10 ; i++){
-       
+    
+    try {
     var movie = movieArray[i];
     var movieId = movie.id;
     var date = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
@@ -70,11 +87,23 @@ function rtLoadTop10MoviesWithTriples(movieArray) {
     var data = addRankInfo(movie,i+1, movieId);
     var dataWithRtTriples = addRtTriples(data);
     
+    try {
     var dataWithRtTriplesAndDbpediaTriples = addDbpediaTriples(dataWithRtTriples, movieName);
+    }
+    catch(err){
+        xdmp.log ("Not inserting DBPedia Triples for this movie" + err);
+        xdmp.documentInsert(docName ,dataWithRtTriples,null,"top10");
+        continue;
+      }
 
     xdmp.log("inserting movies with triples");
     
     xdmp.documentInsert(docName ,dataWithRtTriplesAndDbpediaTriples,null,"top10");
+    }
+    catch(err){
+        xdmp.log ("error in processing movies " + err);
+        continue;
+      }
   }  
 }
 
