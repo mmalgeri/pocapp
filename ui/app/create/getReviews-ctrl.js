@@ -42,7 +42,7 @@
             }
             ).then(
               function(response) {
-                console.log("Got Movie");
+                console.log('Got Movie');
                 win.location.href = '/' ;
               }
           );

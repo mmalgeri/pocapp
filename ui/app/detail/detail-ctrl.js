@@ -12,17 +12,22 @@
 
 
       mlRest.getDocument(uri, { format: 'json' }).then(function(response) {
+        
         model.detail = response.data;
-        model.string = JSON.stringify(model.detail);
-        
-        if (model.string.substring(0,1) === '{') {
-          model.dataType = 'json'; 
-        } else {
-          model.dataType = 'xml';
-        }
 
+        if (model.detail.tweet !== undefined) {
+          model.mode = 'tweet';
+          console.log('mode is tweet'); 
+        } else if (model.detail.reviews !== undefined) {
+          model.mode = 'review';
+          console.log('mode is review');
+        } else {
+          model.mode = 'actor';
+          console.log('mode is actor');
+
+        }
         
-      });
+      }); 
 
       angular.extend($scope, {
         model: model

@@ -38,21 +38,6 @@ angular.module('sample', [
       });
   }]);
 
-
-var module = angular.module('sample.common', []);
-
-
-module.filter('object2Array', function() {
-	'use strict';
-  return function(input) {
-    var out = [];
-    for (var name in input) {
-    	input[name].__key = name;
-      out.push(input[name]);
-    }
-    return out;
-  };
-});
 // Copied from https://docs.angularjs.org/api/ng/service/$compile
 angular.module('sample.create')
   .directive('compile', function($compile) {
@@ -193,7 +178,7 @@ angular.module('sample.create', []);
             }
             ).then(
               function(response) {
-                console.log("Got Movie");
+                console.log('Got Movie');
                 win.location.href = '/' ;
               }
           );
@@ -258,6 +243,20 @@ angular.module('sample.getReviews', []);
 angular.module('sample.loadData', []);
 
 (function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('actors', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/actors-dir.html'
+    };
+  }]);
+}());
+
+(function () {
   'use strict';
 
   angular.module('sample.detail')
@@ -271,17 +270,22 @@ angular.module('sample.loadData', []);
 
 
       mlRest.getDocument(uri, { format: 'json' }).then(function(response) {
+        
         model.detail = response.data;
-        model.string = JSON.stringify(model.detail);
-        
-        if (model.string.substring(0,1) === '{') {
-          model.dataType = 'json'; 
-        } else {
-          model.dataType = 'xml';
-        }
 
+        if (model.detail.tweet !== undefined) {
+          model.mode = 'tweet';
+          console.log('mode is tweet'); 
+        } else if (model.detail.reviews !== undefined) {
+          model.mode = 'review';
+          console.log('mode is review');
+        } else {
+          model.mode = 'actor';
+          console.log('mode is actor');
+
+        }
         
-      });
+      }); 
 
       angular.extend($scope, {
         model: model
@@ -293,6 +297,49 @@ angular.module('sample.loadData', []);
 
 angular.module('sample.detail', []);
 
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('reviews', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/reviews-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('tweets', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/tweets-dir.html'
+    };
+  }]);
+}());
+
+
+var module = angular.module('sample.common', []);
+
+
+module.filter('object2Array', function() {
+	'use strict';
+  return function(input) {
+    var out = [];
+    for (var name in input) {
+    	input[name].__key = name;
+      out.push(input[name]);
+    }
+    return out;
+  };
+});
 (function () {
 
   'use strict';
