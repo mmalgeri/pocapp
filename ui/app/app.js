@@ -36,4 +36,7 @@ angular.module('sample', [
       .otherwise({
         redirectTo: '/'
       });
-  }]);
+  }])
+  .filter('decode', function() {
+    return window.decodeURIComponent;
+  });

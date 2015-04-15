@@ -36,7 +36,10 @@ angular.module('sample', [
       .otherwise({
         redirectTo: '/'
       });
-  }]);
+  }])
+  .filter('decode', function() {
+    return window.decodeURIComponent;
+  });
 
 
 var module = angular.module('sample.common', []);
