@@ -21,6 +21,10 @@
         } else if (model.detail.reviews !== undefined) {
           model.mode = 'review';
           console.log('mode is review');
+        }
+          else if (model.detail.runtime !== undefined) {
+          model.mode = 'movie';
+          console.log('mode is movie');
         } else {
           model.mode = 'actor';
           console.log('mode is actor');

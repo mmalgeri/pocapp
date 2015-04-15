@@ -38,6 +38,21 @@ angular.module('sample', [
       });
   }]);
 
+
+var module = angular.module('sample.common', []);
+
+
+module.filter('object2Array', function() {
+	'use strict';
+  return function(input) {
+    var out = [];
+    for (var name in input) {
+    	input[name].__key = name;
+      out.push(input[name]);
+    }
+    return out;
+  };
+});
 // Copied from https://docs.angularjs.org/api/ng/service/$compile
 angular.module('sample.create')
   .directive('compile', function($compile) {
@@ -279,6 +294,10 @@ angular.module('sample.loadData', []);
         } else if (model.detail.reviews !== undefined) {
           model.mode = 'review';
           console.log('mode is review');
+        }
+          else if (model.detail.runtime !== undefined) {
+          model.mode = 'movie';
+          console.log('mode is movie');
         } else {
           model.mode = 'actor';
           console.log('mode is actor');
@@ -296,6 +315,20 @@ angular.module('sample.loadData', []);
 
 
 angular.module('sample.detail', []);
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('movies', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/movies-dir.html'
+    };
+  }]);
+}());
 
 (function () {
 
@@ -325,21 +358,6 @@ angular.module('sample.detail', []);
   }]);
 }());
 
-
-var module = angular.module('sample.common', []);
-
-
-module.filter('object2Array', function() {
-	'use strict';
-  return function(input) {
-    var out = [];
-    for (var name in input) {
-    	input[name].__key = name;
-      out.push(input[name]);
-    }
-    return out;
-  };
-});
 (function () {
 
   'use strict';

@@ -30,8 +30,10 @@
  <!--         
           <li><a href="/create">Create</a></li>
           <li><a href="/loadData">Load Data</a></li>
-          <li><a href="/getReviews">Get Reviews</a></li>
 -->
+          <li><a href="http://localhost:8020/application/lodlive/LodLive-master/app_en.html?http://dbpedia.org/resource/The_Princess_Bride" target="_BLANK">Browse Actors</a></li>
+          <li><a href="http://localhost:8020/application/tripleExplorer/mm2.html" target="_BLANK">Browse Actors 2</a></li>
+
         </ul>
         <form class="navbar-form navbar-left" role="search">
           <div class="form-group">
@@ -45,7 +47,7 @@
       </div><!-- /.navbar-collapse -->
     </nav>
     <!-- Add your site or application content here -->
-    <div ng-show="!model.user.authenticated">Please log in to see content</div>
+    <div ng-show="!model.user.authenticated">Please log in</div>
     <div class="container" ng-view=""></div>
 
     <div id="footer">
@@ -75,6 +77,7 @@
     <script src="detail/detail-ctrl.js"></script>
     <script src="detail/tweets-dir.js"></script>
     <script src="detail/reviews-dir.js"></script>
+    <script src="detail/movies-dir.js"></script>
     <script src="detail/actors-dir.js"></script>
     <script src="user/user.js"></script>
     <script src="user/user-dir.js"></script>
