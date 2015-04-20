@@ -2,7 +2,7 @@
 
 function get(context, params) {
   // return zero or more document nodes
-
+xdmp.log("In REST endpoint, about to call rtLoadTop10MoviesWithTriples.sjs")
 var result = xdmp.invoke("/application/custom/sjs/rtLoadTop10MoviesWithTriples.sjs",null,{"userId": xdmp.user("admin")});
 
 xdmp.setResponseContentType("text/html");

@@ -36,7 +36,9 @@ return movieIds;
 exports.rtGetTop10Movies = function rtGetTop10Movies () {
 
 var uri = fn.concat("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=",rtapikey);
+xdmp.log("Getting top 10 movies");
 var movieInfoItr = xdmp.httpGet(uri, {format:'json'});
+xdmp.log("Got top 10 movies");
 
 // Need to move movieItr twice to get to movielist
 // movieList is a JSON object that includes the "done" key and the "value" key. 
@@ -135,10 +137,15 @@ var actorArray = new Array();
     
     //for (j=0; j<movieCast.length; j++) {
     for (j=0; j<5; j++) { // just use top 5 actors in a movie
-      
+      try{
       var actor = movieCast[j];
       actor['movieId'] = movieIds[i];
       actorArray.push(actor);
+      }
+    catch(err){
+        xdmp.log ("error in adding creating actor array " + err);
+        continue;
+      }
     }
   }
   return actorArray;

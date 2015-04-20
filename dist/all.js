@@ -41,6 +41,225 @@ angular.module('sample', [
     return window.decodeURIComponent;
   });
 
+
+var module = angular.module('sample.common', []);
+
+
+module.filter('object2Array', function() {
+	'use strict';
+  return function(input) {
+    var out = [];
+    for (var name in input) {
+    	input[name].__key = name;
+      out.push(input[name]);
+    }
+    return out;
+  };
+});
+// Copied from https://docs.angularjs.org/api/ng/service/$compile
+angular.module('sample.create')
+  .directive('compile', function($compile) {
+    'use strict';
+
+    // directive factory creates a link function
+    return function(scope, element, attrs) {
+      scope.$watch(
+        function(scope) {
+           // watch the 'compile' expression for changes
+          return scope.$eval(attrs.compile);
+        },
+        function(value) {
+          // when the 'compile' expression changes
+          // assign it into the current DOM
+          element.html(value);
+
+          // compile the new DOM and link it to the current
+          // scope.
+          // NOTE: we only compile .childNodes so that
+          // we don't get into infinite loop compiling ourselves
+          $compile(element.contents())(scope);
+        }
+      );
+    };
+  });
+
+(function () {
+  'use strict';
+
+  angular.module('sample.create')
+    .controller('CreateCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
+      var model = {
+        person: {
+          isActive: true,
+          balance: 0,
+          picture: 'http://placehold.it/32x32',
+          age: 0,
+          eyeColor: '',
+          name: '',
+          gender: '',
+          company: '',
+          email: '',
+          phone: '',
+          address: '',
+          about: '',
+          registered: '',
+          latitude: 0,
+          longitude: 0,
+          tags: [],
+          friends: [],
+          greeting: '',
+          favoriteFruit: ''
+        },
+        newTag: '',
+        user: user
+      };
+
+      angular.extend($scope, {
+        model: model,
+        editorOptions: {
+          height: '100px',
+          toolbarGroups: [
+            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+            { name: 'links' }
+          ],
+          //override default options
+          toolbar: '',
+          /* jshint camelcase: false */
+          toolbar_full: ''
+        },
+        submit: function() {
+          mlRest.createDocument($scope.model.person, {
+            format: 'json',
+            directory: '/content/',
+            extension: '.json'
+            // TODO: add read/update permissions here like this:
+            // 'perm:sample-role': 'read',
+            // 'perm:sample-role': 'update'
+          }).then(function(response) {
+            win.location.href = '/detail?uri=' + response.headers('location').replace(/(.*\?uri=)/, '');
+          });
+        },
+        addTag: function() {
+          model.person.tags.push(model.newTag);
+          model.newTag = '';
+        }
+      });
+    }]);
+}());
+
+
+angular.module('sample.create', []);
+
+(function () {
+  'use strict';
+
+  angular.module('sample.getReviews')
+    .controller('GetReviewsCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
+       var model = {
+        movieData: {
+          movie: ''
+        },
+        
+        user: user
+      };
+      
+
+      angular.extend($scope, {
+        model: model,
+        editorOptions: {
+          height: '100px',
+          toolbarGroups: [
+            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+            { name: 'links' }
+          ],
+          //override default options
+          toolbar: '',
+          /* jshint camelcase: false */
+          toolbar_full: ''
+        },
+        submit: function() {
+          mlRest.callExtension('getReviews', 
+            {
+              method: 'GET',
+              data: model.movieData.movie,
+              user:user,
+              params: {
+                'movie': model.movieData.movie
+              },
+              headers: {
+                'Content-Type': 'application/text'
+              }
+            }
+            ).then(
+              function(response) {
+                console.log('Got Movie');
+                win.location.href = '/' ;
+              }
+          );
+        }
+      });
+    }]);
+}());
+
+
+angular.module('sample.getReviews', []);
+
+(function () {
+  'use strict';
+
+  angular.module('sample.loadData')
+    .controller('LoadDataCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
+      var model = {
+        topicAndSentiment: {
+          topic: '',
+          sentiment: '',
+          posOrNeg: ''
+        },
+        
+        user: user
+      };
+
+      angular.extend($scope, {
+        model: model,
+        editorOptions: {
+          height: '100px',
+          toolbarGroups: [
+            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+            { name: 'links' }
+          ],
+          //override default options
+          toolbar: '',
+          /* jshint camelcase: false */
+          toolbar_full: ''
+        },
+        submit: function() {
+          mlRest.createSentiment($scope.model.topicAndSentiment, {
+            format: 'xml',
+            directory: '/sentiments/',
+            extension: '.xml',
+            topic: $scope.model.topicAndSentiment.topic,
+            sentiment: $scope.model.topicAndSentiment.sentiment,
+            posOrNeg: $scope.model.topicAndSentiment.posOrNeg
+            // TODO: add read/update permissions here like this:
+            // 'perm:sample-role': 'read',
+            // 'perm:sample-role': 'update'
+          }).then(function(response) {
+            win.location.href = '/' ;
+          });
+        }
+      });
+    }]);
+}());
+
+
+angular.module('sample.loadData', []);
+
 (function () {
 
   'use strict';
@@ -436,225 +655,6 @@ angular.module('sample.search', []);
 
 angular.module('sample.user', ['sample.common']);
 
-// Copied from https://docs.angularjs.org/api/ng/service/$compile
-angular.module('sample.create')
-  .directive('compile', function($compile) {
-    'use strict';
-
-    // directive factory creates a link function
-    return function(scope, element, attrs) {
-      scope.$watch(
-        function(scope) {
-           // watch the 'compile' expression for changes
-          return scope.$eval(attrs.compile);
-        },
-        function(value) {
-          // when the 'compile' expression changes
-          // assign it into the current DOM
-          element.html(value);
-
-          // compile the new DOM and link it to the current
-          // scope.
-          // NOTE: we only compile .childNodes so that
-          // we don't get into infinite loop compiling ourselves
-          $compile(element.contents())(scope);
-        }
-      );
-    };
-  });
-
-(function () {
-  'use strict';
-
-  angular.module('sample.create')
-    .controller('CreateCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
-      var model = {
-        person: {
-          isActive: true,
-          balance: 0,
-          picture: 'http://placehold.it/32x32',
-          age: 0,
-          eyeColor: '',
-          name: '',
-          gender: '',
-          company: '',
-          email: '',
-          phone: '',
-          address: '',
-          about: '',
-          registered: '',
-          latitude: 0,
-          longitude: 0,
-          tags: [],
-          friends: [],
-          greeting: '',
-          favoriteFruit: ''
-        },
-        newTag: '',
-        user: user
-      };
-
-      angular.extend($scope, {
-        model: model,
-        editorOptions: {
-          height: '100px',
-          toolbarGroups: [
-            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-            { name: 'links' }
-          ],
-          //override default options
-          toolbar: '',
-          /* jshint camelcase: false */
-          toolbar_full: ''
-        },
-        submit: function() {
-          mlRest.createDocument($scope.model.person, {
-            format: 'json',
-            directory: '/content/',
-            extension: '.json'
-            // TODO: add read/update permissions here like this:
-            // 'perm:sample-role': 'read',
-            // 'perm:sample-role': 'update'
-          }).then(function(response) {
-            win.location.href = '/detail?uri=' + response.headers('location').replace(/(.*\?uri=)/, '');
-          });
-        },
-        addTag: function() {
-          model.person.tags.push(model.newTag);
-          model.newTag = '';
-        }
-      });
-    }]);
-}());
-
-
-angular.module('sample.create', []);
-
-(function () {
-  'use strict';
-
-  angular.module('sample.getReviews')
-    .controller('GetReviewsCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
-       var model = {
-        movieData: {
-          movie: ''
-        },
-        
-        user: user
-      };
-      
-
-      angular.extend($scope, {
-        model: model,
-        editorOptions: {
-          height: '100px',
-          toolbarGroups: [
-            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-            { name: 'links' }
-          ],
-          //override default options
-          toolbar: '',
-          /* jshint camelcase: false */
-          toolbar_full: ''
-        },
-        submit: function() {
-          mlRest.callExtension('getReviews', 
-            {
-              method: 'GET',
-              data: model.movieData.movie,
-              user:user,
-              params: {
-                'movie': model.movieData.movie
-              },
-              headers: {
-                'Content-Type': 'application/text'
-              }
-            }
-            ).then(
-              function(response) {
-                console.log('Got Movie');
-                win.location.href = '/' ;
-              }
-          );
-        }
-      });
-    }]);
-}());
-
-
-angular.module('sample.getReviews', []);
-
-(function () {
-  'use strict';
-
-  angular.module('sample.loadData')
-    .controller('LoadDataCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
-      var model = {
-        topicAndSentiment: {
-          topic: '',
-          sentiment: '',
-          posOrNeg: ''
-        },
-        
-        user: user
-      };
-
-      angular.extend($scope, {
-        model: model,
-        editorOptions: {
-          height: '100px',
-          toolbarGroups: [
-            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-            { name: 'links' }
-          ],
-          //override default options
-          toolbar: '',
-          /* jshint camelcase: false */
-          toolbar_full: ''
-        },
-        submit: function() {
-          mlRest.createSentiment($scope.model.topicAndSentiment, {
-            format: 'xml',
-            directory: '/sentiments/',
-            extension: '.xml',
-            topic: $scope.model.topicAndSentiment.topic,
-            sentiment: $scope.model.topicAndSentiment.sentiment,
-            posOrNeg: $scope.model.topicAndSentiment.posOrNeg
-            // TODO: add read/update permissions here like this:
-            // 'perm:sample-role': 'read',
-            // 'perm:sample-role': 'update'
-          }).then(function(response) {
-            win.location.href = '/' ;
-          });
-        }
-      });
-    }]);
-}());
-
-
-angular.module('sample.loadData', []);
-
-
-var module = angular.module('sample.common', []);
-
-
-module.filter('object2Array', function() {
-	'use strict';
-  return function(input) {
-    var out = [];
-    for (var name in input) {
-    	input[name].__key = name;
-      out.push(input[name]);
-    }
-    return out;
-  };
-});
 (function () {
   'use strict';
 

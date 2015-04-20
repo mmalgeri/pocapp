@@ -73,6 +73,7 @@ function addDbpediaTriples (dataWithRtTriplesIn, name) {
 // and triple info form rotten tomatoes and DBPedia
 function rtLoadTop10MoviesWithTriples(movieArray) {
   
+  xdmp.log("Got top 10 movie array");
   movieArray = movieArray.toObject();
   for (i = 0; i < 10 ; i++){
     
