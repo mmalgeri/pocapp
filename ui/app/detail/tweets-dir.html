@@ -1,2 +1,5 @@
-<div>{{model.detail.actorName}}</div>
+<h1>A tweet about {{model.detail.actorName}} {{model.detail.movieTitle}}</h1>
+<BR><BR>
 <div>{{model.detail.tweet | decode}}</div>
+<BR><BR>
+<div>Try browsing <B>{{model.detail.actorName}}{{model.detail.movieTitle}}</B> at <a ng-href='http://localhost:8020/application/LodLive/tester.html?name={{model.detail.actorName}}{{model.detail.movieTitle}}'> DBPedia</a></div>

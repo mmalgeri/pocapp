@@ -65,7 +65,7 @@ function twLoadTweetsForTop10Movies (tAndI, accessId) {
       aTweetObj = JSON.parse(aTweetObj);
       
       date = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
-      docName = fn.concat("tweet-movie-",movieId,"-",date,"-",j,".json");
+      docName = fn.concat("Movie_Tweet-",movieId,"-",date,"-",j,".json");
       xdmp.documentInsert(docName ,aTweetObj, null,"tweets-movies");
       }
       catch(err) {

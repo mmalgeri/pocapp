@@ -36,7 +36,7 @@
       };
         var name = getURLParameter();
       console.log(name);
-      jQuery('#graph').lodlive({ profile: MarkLogicProfile, firstUri: 'http://dbpedia.org/resource/' + name.replace(' ', '_') }); // 'http://dbpedia.org/resource/Philadelphia_Flyers'
+      jQuery('#graph').lodlive({ profile: MarkLogicProfile, firstUri: name.replace(' ', '\u0020') }); // 'http://dbpedia.org/resource/Philadelphia_Flyers'
     </script>
   </body>
 </html>

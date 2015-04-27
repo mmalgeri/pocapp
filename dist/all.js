@@ -1,7 +1,7 @@
 
 angular.module('sample', [
   'ngRoute', 'ngCkeditor', 'sample.user', 'sample.search', 'sample.common', 'sample.detail',
-  'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.loadData', 'sample.getReviews'
+  'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.createTriples', 'sample.loadData', 'sample.getReviews'
 ])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
@@ -17,6 +17,10 @@ angular.module('sample', [
         templateUrl: '/create/create.html',
         controller: 'CreateCtrl'
       })
+      .when('/createTriples', {
+        templateUrl: '/create/createTriples.html',
+        controller: 'CreateTriplesCtrl'
+      })
       .when('/detail', {
         templateUrl: '/detail/detail.html',
         controller: 'DetailCtrl'
@@ -28,10 +32,6 @@ angular.module('sample', [
       .when('/loadData', {
         templateUrl: '/create/loadData.html',
         controller: 'LoadDataCtrl'
-      })
-      .when('/getReviews', {
-        templateUrl: '/create/getReviews.html',
-        controller: 'GetReviewsCtrl'
       })
       .otherwise({
         redirectTo: '/'
@@ -151,6 +151,45 @@ angular.module('sample.create')
 
 
 angular.module('sample.create', []);
+
+(function () {
+  'use strict';
+
+  angular.module('sample.createTriples')
+    .controller('CreateTriplesCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
+      var model = {
+        triple: {
+          subject: '',
+          predicate: '',
+          object: ''
+        },
+        
+        user: user
+      };
+
+      angular.extend($scope, {
+        model: model,
+        submit: function() {
+          mlRest.createTriple($scope.model.triple, {
+            format: 'json',
+            directory: '/triples/',
+            extension: '.json',
+            subject: $scope.model.triple.subject,
+            predicate: $scope.model.triple.predicate,
+            object: $scope.model.triple.object
+            // TODO: add read/update permissions here like this:
+            // 'perm:sample-role': 'read',
+            // 'perm:sample-role': 'update'
+          }).then(function(response) {
+            win.location.href = '/' ;
+          });
+        }
+      });
+    }]);
+}());
+
+
+angular.module('sample.createTriples', []);
 
 (function () {
   'use strict';
@@ -301,7 +340,8 @@ angular.module('sample.loadData', []);
           else if (model.detail.runtime !== undefined) {
           model.mode = 'movie';
           console.log('mode is movie');
-        } else {
+        }
+          else {
           model.mode = 'actor';
           console.log('mode is actor');
 
@@ -357,6 +397,20 @@ angular.module('sample.detail', []);
     return {
       restrict: 'E',
       templateUrl: '/detail/tweets-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('tweetsmovies', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/tweetsmovies-dir.html'
     };
   }]);
 }());
@@ -931,6 +985,15 @@ angular.module('sample.user', ['sample.common']);
             // send a POST request to /v1/documents
             return $http.post(
               '/v1/documents',
+              doc,
+              {
+                params: options
+              });
+          },
+          createTriple: function(doc, options) {
+            // send a POST request to /application/custom/sjs/createTriple.sjs
+            return $http.post(
+              '/application/custom/sjs/createTriple.sjs',
               doc,
               {
                 params: options

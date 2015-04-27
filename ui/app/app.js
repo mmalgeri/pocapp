@@ -1,7 +1,7 @@
 
 angular.module('sample', [
   'ngRoute', 'ngCkeditor', 'sample.user', 'sample.search', 'sample.common', 'sample.detail',
-  'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.loadData', 'sample.getReviews'
+  'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.createTriples', 'sample.loadData', 'sample.getReviews'
 ])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
@@ -17,6 +17,10 @@ angular.module('sample', [
         templateUrl: '/create/create.html',
         controller: 'CreateCtrl'
       })
+      .when('/createTriples', {
+        templateUrl: '/create/createTriples.html',
+        controller: 'CreateTriplesCtrl'
+      })
       .when('/detail', {
         templateUrl: '/detail/detail.html',
         controller: 'DetailCtrl'
@@ -28,10 +32,6 @@ angular.module('sample', [
       .when('/loadData', {
         templateUrl: '/create/loadData.html',
         controller: 'LoadDataCtrl'
-      })
-      .when('/getReviews', {
-        templateUrl: '/create/getReviews.html',
-        controller: 'GetReviewsCtrl'
       })
       .otherwise({
         redirectTo: '/'

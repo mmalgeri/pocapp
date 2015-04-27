@@ -81,7 +81,7 @@ function rtLoadTop10MoviesWithTriples(movieArray) {
     var movie = movieArray[i];
     var movieId = movie.id;
     var date = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
-    var docName = fn.concat('movie-',i+1,'-',date,'-',movieId,'.json');
+    var docName = fn.concat('Movie__Info-',i+1,'-',date,'-',movieId,'.json');
     
     var movieName = movie.title;
     

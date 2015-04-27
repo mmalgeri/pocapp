@@ -75,7 +75,7 @@ function twLoadTweetsForTop10Actors (aArray, accessId) {
       aTweet = JSON.parse(aTweet);
       
       date = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
-      docName = fn.concat("tweet-actor-",actorId,"-",date,"-",j,".json");
+      docName = fn.concat("Actor_Tweet-",actorId,"-",date,"-",j,".json");
       xdmp.documentInsert(docName ,aTweet, null,"tweets-actors");
       }
       catch(err){

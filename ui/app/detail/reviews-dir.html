@@ -1,3 +1,4 @@
-<h1>The Movie Reviews</h1>
-<div>{{model.detail.movieTitle}}</div>
-<div>{{model.detail.reviews[0].quote}}</div>
+<div><B><h1>{{model.detail.movieTitle}} Movie Reviews</h1></B></div>
+<BR>
+<div ng-repeat="review in model.detail.reviews"><B>{{review.critic}}</B> of <B>{{review.publication}}</B> gave the movie a freshness rating of <B>{{review.freshness}}</B> and says,<BR> "{{review.quote}}." Here's a link to the <a href="{{review.links.review}}" target="_BLANK">review.</a> <BR><BR></div>
+<!-- <div ng-repeat="review in model.detail.reviews">{{model.detail.reviews[0].quote}}</div> -->

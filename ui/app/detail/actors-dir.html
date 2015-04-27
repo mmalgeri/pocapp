@@ -1,4 +1,9 @@
-<h1>Actor Info</h1>
-<div>{{model.detail.actorName}}</div>
-<div>{{model.detail.movieTitle}}</div>
-<div><a ng-href='http://localhost:8020/application/LodLive/tester.html?actorName={{model.detail.actorName}}'>Browse Actor</a></div>
+<h1>{{model.detail.actorName}}</h1>
+<BR><BR>
+<div>Starred in <B>{{model.detail.movieTitle}}</B></div>
+<BR><BR>
+<div>Bio from <B>The Movie Database</B> - {{model.detail.tmdbTriples[0].triple.object.value}}</div>
+<BR><BR>
+<div>Visit <B>{{model.detail.actorName}}</B> at <a href="{{model.detail.tmdbTriples[2].triple.object.value}}" target="_BLANK">IMDB</a></div>
+<BR><BR>
+<div>Browse <B>{{model.detail.actorName}}</B> at <a ng-href='http://localhost:8020/application/LodLive/tester.html?name={{model.detail.actorName}}'> DBPedia</a></div>

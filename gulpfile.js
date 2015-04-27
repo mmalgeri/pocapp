@@ -148,3 +148,6 @@ request("http://localhost:7020/v1/resources/getMovieActorTweets", function (erro
   }
 });
 });
+
+// Get All MovieApp Data  Task
+gulp.task('getAllMovieData', ['getMovies', 'getMovieActors', 'getMovieReviews', 'getMovieTweets', 'getMovieActorTweets']);

@@ -63,7 +63,7 @@
 
   <search:constraint name="Top 10 Movies">
     <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/">
-      <search:facet-option>limit=25</search:facet-option>
+      <search:facet-option>limit=10</search:facet-option>
       <search:facet-option>frequency-order</search:facet-option>
       <search:facet-option>descending</search:facet-option>
       <search:element ns="" name="movieTitle"/>
@@ -72,7 +72,7 @@
 
   <search:constraint name="Actors">
     <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/">
-      <search:facet-option>limit=25</search:facet-option>
+      <search:facet-option>limit=10</search:facet-option>
       <search:facet-option>frequency-order</search:facet-option>
       <search:facet-option>descending</search:facet-option>
       <search:element ns="" name="actorName"/>
@@ -81,7 +81,7 @@
 
   <search:constraint name="Reviews from Critics">
     <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/">
-      <search:facet-option>limit=25</search:facet-option>
+      <search:facet-option>limit=10</search:facet-option>
       <search:facet-option>frequency-order</search:facet-option>
       <search:facet-option>descending</search:facet-option>
       <search:element ns="" name="critic"/>

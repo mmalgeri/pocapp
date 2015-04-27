@@ -279,6 +279,15 @@
                 params: options
               });
           },
+          createTriple: function(doc, options) {
+            // send a POST request to /application/custom/sjs/createTriple.sjs
+            return $http.post(
+              '/application/custom/sjs/createTriple.sjs',
+              doc,
+              {
+                params: options
+              });
+          },
           createSentiment: function(doc, options) {
             // send a POST request to /application/custom/loadTweetSentiments.xqy
             return $http.post(

@@ -27,12 +27,12 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li><a href="/">Search</a></li>
- <!--         
-          <li><a href="/create">Create</a></li>
-          <li><a href="/loadData">Load Data</a></li>
--->
-          <li><a href="http://localhost:8020/application/LodLive/tester.html" target="_BLANK">Browse Actors</a></li>
-          <li><a href="http://localhost:8020/application/tripleExplorer/mm2.html" target="_BLANK">Browse Actors 2</a></li>
+          
+          <li><a href="/createTriples">Create Actor Triples</a></li>
+<!--      <li><a href="/loadData">Load Data</a></li> -->
+
+ <!--         <li><a href="http://localhost:8020/application/LodLive/tester.html" target="_BLANK">Browse Actors</a></li> -->
+<!--          <li><a href="http://localhost:8020/application/tripleExplorer/mm2.html" target="_BLANK">Browse Actors 2</a></li> -->
 
         </ul>
         <form class="navbar-form navbar-left" role="search">
@@ -46,6 +46,7 @@
         <div ml-user username="model.user.name" password="model.user.password" authenticated="model.user.authenticated" login="login(username, password)" logout="logout()" loginerror="model.user.loginError"/>
       </div><!-- /.navbar-collapse -->
     </nav>
+    <center><img src="./images/hollywood.jpg"/></center>
     <!-- Add your site or application content here -->
     <div ng-show="!model.user.authenticated">Please log in</div>
     <div class="container" ng-view=""></div>
@@ -88,6 +89,8 @@
     <script src="create/compile.js"></script>
     <script src="create/loadData.js"></script>
     <script src="create/loadData-ctrl.js"></script>
+    <script src="create/createTriples.js"></script>
+    <script src="create/createTriples-ctrl.js"></script>
     <script src="create/getReviews.js"></script>
     <script src="create/getReviews-ctrl.js"></script>
     <script src="common/common.js"></script>

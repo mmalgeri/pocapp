@@ -25,7 +25,8 @@
           else if (model.detail.runtime !== undefined) {
           model.mode = 'movie';
           console.log('mode is movie');
-        } else {
+        }
+          else {
           model.mode = 'actor';
           console.log('mode is actor');
 

@@ -85,6 +85,7 @@ function rtLoadTopMovieActorsWithTriples( ids, movies ) {
 var apikey = "ek43fd5d4pgnkr44m24de9wr";
 
   for (i=0; i<10; i++) {
+    try {
     var uri = fn.concat("http://api.rottentomatoes.com/api/public/v1.0/movies/",ids[i],"/cast.json?apikey=",apikey);
     var movieInfoItr = xdmp.httpGet(uri, {format:'json'});
     xdmp.sleep(205);
@@ -103,13 +104,18 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
       }
       catch(err){
         xdmp.log ("error in adding info and triples " + err);
-        var docName = fn.concat('actors-',actor.id,'-',ids[i],'.json');
+        var docName = fn.concat('Actor__Info-',actor.id,'-',ids[i],'.json');
         xdmp.documentInsert(docName ,actor, null,"actor");
         continue;
       }
       
-      var docName = fn.concat('actors-',actor.id,'-',ids[i],'.json');
+      var docName = fn.concat('Actor__Info-',actor.id,'-',ids[i],'.json');
       xdmp.documentInsert(docName ,actor, null,"actor");
+    }
+    }
+    catch(err){
+        xdmp.log ("error in adding actors  " + err);
+        continue;
     }
   }
 }

@@ -1,2 +1,14 @@
-<div>{{model.detail.title}}</div>
-<div>{{model.detail.synopsis}}</div>
+
+<h1>{{model.detail.title}}</h1>
+<BR><BR>
+<div><img src="{{model.detail.posters.thumbnail}}"></img></div>
+<BR><BR>
+<div>The rotten tomatoes movie page is <a href="{{model.detail.links.alternate}}" target="_BLANK">here</a></div>
+<BR><BR>
+<div><B>Movie synopsis</B><BR> {{model.detail.synopsis}}</div>
+<BR><BR>
+<div>Critics rated this movie <B>{{model.detail.ratings.audience_rating}}</B> with a score of <B>{{model.detail.ratings.audience_score}}</B></div>
+<BR><BR>
+<div>Audience rated this movie <B>{{model.detail.ratings.critics_rating}}</B> with a score of <B>{{model.detail.ratings.critics_score}}</B></div>
+<BR><BR>
+<div><a ng-href='http://localhost:8020/application/LodLive/tester.html?name={{model.detail.title}}'>Try browsing at DBPedia</a></div>
