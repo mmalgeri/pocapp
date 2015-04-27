@@ -63,6 +63,7 @@ function twLoadTweetsForTop10Movies (tAndI, accessId) {
       aTweetObj = '{ "tweet"' + ':' + '"' + aTweetObj + '"' + ',' + '"movieId"'+ ':' + '"' + movieId + '"' + ',' + '"movieTitle"' + ':' + '"' + query + '"' + '}';
       aTweetObj = cleanString(aTweetObj);
       aTweetObj = JSON.parse(aTweetObj);
+      aTweetObj.modeFlag = 'movieTweetMode';
       
       date = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
       docName = fn.concat("Movie_Tweet-",movieId,"-",date,"-",j,".json");

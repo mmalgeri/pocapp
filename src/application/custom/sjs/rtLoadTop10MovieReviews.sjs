@@ -6,6 +6,7 @@ function addIdInfo( aReview, id, movie) {
   aReview['id'] = id;
   aReview['movieId'] = id;
   aReview['movieTitle'] = movie.title;
+  aReview['modeFlag'] = 'reviewMode';
   return aReview;
 }
 

@@ -7,6 +7,7 @@ function addRankInfo( aMovie, rank, id) {
   aMovie['dateInTop'] = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
   aMovie['rank'] = rank;
   aMovie['movieId'] = id;
+  aMovie['modeFlag'] = 'movieMode';
   return aMovie;
 }
 

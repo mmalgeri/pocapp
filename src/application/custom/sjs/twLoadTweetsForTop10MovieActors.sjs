@@ -15,6 +15,7 @@ function addIdInfo( aActor, id) {
   
   aActor['movieId'] = id;
   aActor['actorId'] = aActor.id;
+  aActor['modeFlag'] = 'actorTweetMode';
   return aActor;
 }
 
@@ -73,6 +74,7 @@ function twLoadTweetsForTop10Actors (aArray, accessId) {
       aTweet = '{ "tweet"' + ':' + '"' + aTweet + '"' + ',' + '"actorId"'+ ':' + '"' + actorId + '"' + ',' + '"actorName"' + ':' + '"' + query + '"' + '}';
       aTweet = cleanString(aTweet);
       aTweet = JSON.parse(aTweet);
+      aTweet.modeFlag = 'actorTweetMode';
       
       date = fn.formatDateTime(fn.currentDateTime(),"[Y0001]-[M01]-[D01]-[H01]");
       docName = fn.concat("Actor_Tweet-",actorId,"-",date,"-",j,".json");
