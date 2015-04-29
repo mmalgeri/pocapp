@@ -1,12 +1,52 @@
 <pagination boundary-links="true" total-items="total" ng-model="currentPage" items-per-page="pageLength" ng-change="paginate({page: currentPage})" max-size="5" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" ng-show="total > 0"></pagination>
 <span class="search-metrics"ng-show="total > 0">Showing {{start}}-{{Math.min(start + pageLength - 1, total)}} of {{total}}</span>
 <h3 ng-show="total === 0">No results to show</h3>
-<div ng-repeat="result in results">
-  <h4><a ng-href="/detail?uri={{result.uri}}">{{result.metadata.name[0] || result.uri.slice(0,11)}}</a></h4>
+<div ng-repeat="result in results">	
+
+<div ng-if="result.uri.match('Actor_Tweet')">
+  <h4><a ng-href="/detail?uri={{result.uri}}">An actor tweet</a></h4>
   <div class="matches">
     <div ng-repeat="match in result.matches">
       <div ng-repeat="text in match['match-text']">{{text | decode}}</div>
     </div>
   </div>
+ </div>
+ 
+ <div ng-if="result.uri.match('Movie_Tweet')">
+  <h4><a ng-href="/detail?uri={{result.uri}}">A movie tweet</a></h4>
+  <div class="matches">
+    <div ng-repeat="match in result.matches">
+      <div ng-repeat="text in match['match-text']">{{text | decode}}</div>
+    </div>
+  </div>
+ </div>	
+
+ <div ng-if="result.uri.match('MovieReview')">
+  <h4><a ng-href="/detail?uri={{result.uri}}">A movie review</a></h4>
+  <div class="matches">
+    <div ng-repeat="match in result.matches">
+      <div ng-repeat="text in match['match-text']">{{text | decode}}</div>
+    </div>
+  </div>
+ </div>
+
+ <div ng-if="result.uri.match('Actor__Info')">
+  <h4><a ng-href="/detail?uri={{result.uri}}">Actor information</a></h4>
+  <div class="matches">
+    <div ng-repeat="match in result.matches">
+      <div ng-repeat="text in match['match-text']">{{text | decode}}</div>
+    </div>
+  </div>
+ </div>
+
+ <div ng-if="result.uri.match('Movie__Info')">
+  <h4><a ng-href="/detail?uri={{result.uri}}">Movie information</a></h4>
+  <div class="matches">
+    <div ng-repeat="match in result.matches">
+      <div ng-repeat="text in match['match-text']">{{text | decode}}</div>
+    </div>
+  </div>
+ </div>
+
 </div>
 	

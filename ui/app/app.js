@@ -33,6 +33,9 @@ angular.module('sample', [
         templateUrl: '/create/loadData.html',
         controller: 'LoadDataCtrl'
       })
+      .when('/agentOntology', {
+        templateUrl: '/agentOntology.html'
+      })
       .otherwise({
         redirectTo: '/'
       });

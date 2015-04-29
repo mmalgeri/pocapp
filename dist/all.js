@@ -33,6 +33,9 @@ angular.module('sample', [
         templateUrl: '/create/loadData.html',
         controller: 'LoadDataCtrl'
       })
+      .when('/agentOntology', {
+        templateUrl: '/agentOntology.html'
+      })
       .otherwise({
         redirectTo: '/'
       });
@@ -41,6 +44,21 @@ angular.module('sample', [
     return window.decodeURIComponent;
   });
 
+
+var module = angular.module('sample.common', []);
+
+
+module.filter('object2Array', function() {
+	'use strict';
+  return function(input) {
+    var out = [];
+    for (var name in input) {
+    	input[name].__key = name;
+      out.push(input[name]);
+    }
+    return out;
+  };
+});
 // Copied from https://docs.angularjs.org/api/ng/service/$compile
 angular.module('sample.create')
   .directive('compile', function($compile) {
@@ -284,21 +302,6 @@ angular.module('sample.getReviews', []);
 
 angular.module('sample.loadData', []);
 
-
-var module = angular.module('sample.common', []);
-
-
-module.filter('object2Array', function() {
-	'use strict';
-  return function(input) {
-    var out = [];
-    for (var name in input) {
-    	input[name].__key = name;
-      out.push(input[name]);
-    }
-    return out;
-  };
-});
 (function () {
 
   'use strict';
