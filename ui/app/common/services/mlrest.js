@@ -288,6 +288,15 @@
                 params: options
               });
           },
+          owedRevenue: function(doc, options) {
+            // send a POST request to /application/custom/sjs/owedRevenue.sjs
+            return $http.post(
+              '/application/custom/sjs/owedRevenue.sjs',
+              doc,
+              {
+                params: options
+              });
+          },
           createSentiment: function(doc, options) {
             // send a POST request to /application/custom/loadTweetSentiments.xqy
             return $http.post(

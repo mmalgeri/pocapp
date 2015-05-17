@@ -217,6 +217,7 @@ exports.buildExpress = function(options) {
   app.use('/loadData', express.static('ui/app'));
   app.use('/getReviews', express.static('ui/app'));
   app.use('/createTriples', express.static('ui/app'));
+  app.use('/owedRevenue', express.static('ui/app'));
 
   return app;
 };

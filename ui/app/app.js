@@ -1,7 +1,8 @@
 
 angular.module('sample', [
   'ngRoute', 'ngCkeditor', 'sample.user', 'sample.search', 'sample.common', 'sample.detail',
-  'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.createTriples', 'sample.loadData', 'sample.getReviews'
+  'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.createTriples', 
+  'sample.loadData', 'sample.getReviews', 'sample.owedRevenue'
 ])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
@@ -35,6 +36,10 @@ angular.module('sample', [
       })
       .when('/agentOntology', {
         templateUrl: '/agentOntology.html'
+      })
+      .when('/owedRevenue', {
+        templateUrl: '/owedRevenue/owedRevenue.html',
+        controller: 'OwedRevenueCtrl'
       })
       .otherwise({
         redirectTo: '/'

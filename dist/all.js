@@ -1,7 +1,8 @@
 
 angular.module('sample', [
   'ngRoute', 'ngCkeditor', 'sample.user', 'sample.search', 'sample.common', 'sample.detail',
-  'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.createTriples', 'sample.loadData', 'sample.getReviews'
+  'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.createTriples', 
+  'sample.loadData', 'sample.getReviews', 'sample.owedRevenue'
 ])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
@@ -35,6 +36,10 @@ angular.module('sample', [
       })
       .when('/agentOntology', {
         templateUrl: '/agentOntology.html'
+      })
+      .when('/owedRevenue', {
+        templateUrl: '/owedRevenue/owedRevenue.html',
+        controller: 'OwedRevenueCtrl'
       })
       .otherwise({
         redirectTo: '/'
@@ -455,6 +460,170 @@ angular.module('sample.detail', []);
 (function () {
   'use strict';
 
+  angular.module('sample.owedRevenue')
+    .controller('OwedRevenueCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
+      var model = { 
+        detail: {},   
+        user: user
+      };
+
+      angular.extend($scope, {
+        model: model,
+        submit: function() {
+          mlRest.owedRevenue($scope.model.user).then(function(response) {
+            model.detail = response;
+            
+          });
+        }
+      });
+    }]);
+}());
+
+angular.module('sample.owedRevenue', []);
+
+(function () {
+
+  'use strict';
+
+  angular.module('sample.search')
+    .filter('object2Array', function() {
+      return function(input) {
+        var out = [];
+        for (var name in input) {
+          input[name].__key = name;
+          out.push(input[name]);
+        }
+        return out;
+      };
+    })
+    .directive('facets', [function () {
+      return {
+        restrict: 'E',
+        scope: {
+          facets: '=facetList',
+          selected: '=selected',
+          select: '&select',
+          clear: '&clear'
+        },
+        templateUrl: '/search/facets-dir.html',
+        link: function() {
+        }
+      };
+    }]);
+}());
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.search');
+
+  module.directive('results', [function () {
+    return {
+      restrict: 'E',
+      scope: {
+        results: '=resultList',
+        total: '=total',
+        start: '=start',
+        pageLength: '=pageLength',
+        currentPage: '=currentPage',
+        paginate: '&paginate',
+        updateQuery: '&updateQuery'
+      },
+      templateUrl: '/search/results-dir.html',
+      link: function(scope) {
+        scope.Math = window.Math;
+      }
+    };
+  }]);
+}());
+
+(function () {
+  'use strict';
+
+  angular.module('sample.search')
+    .controller('SearchCtrl', ['$scope', 'MLRest', 'User', '$location', function ($scope, mlRest, user, $location) {
+      var model = {
+        selected: [],
+        text: '',
+        user: user
+      };
+
+      var searchContext = mlRest.createSearchContext();
+
+      function updateSearchResults(data) {
+        model.search = data;
+      }
+
+      (function init() {
+        searchContext
+          .search()
+          .then(updateSearchResults);
+      })();
+
+      angular.extend($scope, {
+        model: model,
+        selectFacet: function(facet, value) {
+          var existing = model.selected.filter( function( selectedFacet ) {
+            return selectedFacet.facet === facet && selectedFacet.value === value;
+          });
+          if ( existing.length === 0 ) {
+            model.selected.push({facet: facet, value: value});
+            searchContext
+              .selectFacet(facet, value)
+              .search()
+              .then(updateSearchResults);
+          }
+        },
+        clearFacet: function(facet, value) {
+          var i;
+          for (i = 0; i < model.selected.length; i++) {
+            if (model.selected[i].facet === facet && model.selected[i].value === value) {
+              model.selected.splice(i, 1);
+              break;
+            }
+          }
+          searchContext
+            .clearFacet(facet, value)
+            .search()
+            .then(updateSearchResults);
+        },
+        textSearch: function() {
+          searchContext
+            .setText(model.text)
+            .search()
+            .then(updateSearchResults);
+          $location.path('/');
+        },
+        pageChanged: function(page) {
+          searchContext
+            .setPage(page, model.pageLength)
+            .search()
+            .then(updateSearchResults);
+        },
+        getSuggestions: function(val) {
+          return mlRest.callExtension('extsuggest', { 'method' : 'GET', 'params' : { 'rs:pqtxt' : val, 'rs:options' : 'all'} }).then(function(res){
+            return res.suggestions;
+          });
+        }
+      });
+
+      $scope.$watch('model.user.authenticated', function(newValue, oldValue) {
+        // authentication status has changed; rerun search
+        searchContext.search().then(updateSearchResults, function(error) {
+          model.search = {};
+        });
+      });
+
+    }]);
+}());
+
+
+angular.module('sample.search', []);
+
+(function () {
+  'use strict';
+
   angular.module('sample.user')
     .controller('ProfileCtrl', ['$scope', 'MLRest', 'User', '$location', function ($scope, mlRest, user, $location) {
       var model = {
@@ -605,146 +774,6 @@ angular.module('sample.detail', []);
 
 
 angular.module('sample.user', ['sample.common']);
-
-(function () {
-
-  'use strict';
-
-  angular.module('sample.search')
-    .filter('object2Array', function() {
-      return function(input) {
-        var out = [];
-        for (var name in input) {
-          input[name].__key = name;
-          out.push(input[name]);
-        }
-        return out;
-      };
-    })
-    .directive('facets', [function () {
-      return {
-        restrict: 'E',
-        scope: {
-          facets: '=facetList',
-          selected: '=selected',
-          select: '&select',
-          clear: '&clear'
-        },
-        templateUrl: '/search/facets-dir.html',
-        link: function() {
-        }
-      };
-    }]);
-}());
-
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.search');
-
-  module.directive('results', [function () {
-    return {
-      restrict: 'E',
-      scope: {
-        results: '=resultList',
-        total: '=total',
-        start: '=start',
-        pageLength: '=pageLength',
-        currentPage: '=currentPage',
-        paginate: '&paginate',
-        updateQuery: '&updateQuery'
-      },
-      templateUrl: '/search/results-dir.html',
-      link: function(scope) {
-        scope.Math = window.Math;
-      }
-    };
-  }]);
-}());
-
-(function () {
-  'use strict';
-
-  angular.module('sample.search')
-    .controller('SearchCtrl', ['$scope', 'MLRest', 'User', '$location', function ($scope, mlRest, user, $location) {
-      var model = {
-        selected: [],
-        text: '',
-        user: user
-      };
-
-      var searchContext = mlRest.createSearchContext();
-
-      function updateSearchResults(data) {
-        model.search = data;
-      }
-
-      (function init() {
-        searchContext
-          .search()
-          .then(updateSearchResults);
-      })();
-
-      angular.extend($scope, {
-        model: model,
-        selectFacet: function(facet, value) {
-          var existing = model.selected.filter( function( selectedFacet ) {
-            return selectedFacet.facet === facet && selectedFacet.value === value;
-          });
-          if ( existing.length === 0 ) {
-            model.selected.push({facet: facet, value: value});
-            searchContext
-              .selectFacet(facet, value)
-              .search()
-              .then(updateSearchResults);
-          }
-        },
-        clearFacet: function(facet, value) {
-          var i;
-          for (i = 0; i < model.selected.length; i++) {
-            if (model.selected[i].facet === facet && model.selected[i].value === value) {
-              model.selected.splice(i, 1);
-              break;
-            }
-          }
-          searchContext
-            .clearFacet(facet, value)
-            .search()
-            .then(updateSearchResults);
-        },
-        textSearch: function() {
-          searchContext
-            .setText(model.text)
-            .search()
-            .then(updateSearchResults);
-          $location.path('/');
-        },
-        pageChanged: function(page) {
-          searchContext
-            .setPage(page, model.pageLength)
-            .search()
-            .then(updateSearchResults);
-        },
-        getSuggestions: function(val) {
-          return mlRest.callExtension('extsuggest', { 'method' : 'GET', 'params' : { 'rs:pqtxt' : val, 'rs:options' : 'all'} }).then(function(res){
-            return res.suggestions;
-          });
-        }
-      });
-
-      $scope.$watch('model.user.authenticated', function(newValue, oldValue) {
-        // authentication status has changed; rerun search
-        searchContext.search().then(updateSearchResults, function(error) {
-          model.search = {};
-        });
-      });
-
-    }]);
-}());
-
-
-angular.module('sample.search', []);
 
 (function () {
   'use strict';
@@ -1031,6 +1060,15 @@ angular.module('sample.search', []);
             // send a POST request to /application/custom/sjs/createTriple.sjs
             return $http.post(
               '/application/custom/sjs/createTriple.sjs',
+              doc,
+              {
+                params: options
+              });
+          },
+          owedRevenue: function(doc, options) {
+            // send a POST request to /application/custom/sjs/owedRevenue.sjs
+            return $http.post(
+              '/application/custom/sjs/owedRevenue.sjs',
               doc,
               {
                 params: options

@@ -10,7 +10,7 @@ declare namespace inferOwedRevenue = "http://marklogic.com/pocapp/inferOwedReven
 
 let $rdfs-store := sem:ruleset-store("rdfs.rules",sem:store() )
 
-return(
+let $res := 
   (: use the store you just created - pass it into sem:sparql() :)
   sem:sparql('
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
@@ -28,7 +28,7 @@ WHERE
   (),
   (),
   $rdfs-store
-  ),
-  xdmp:log("inferred who is owed revenue")
   )
+
+  return $res
   
