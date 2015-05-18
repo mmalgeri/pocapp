@@ -10,10 +10,6 @@
     </div>
   </form>
 
-<div ng-if='model.detail.data[0].q !== "undefined"'>
-  <div ng-if='model.detail.data[0].q !== "undefined"'class="col-md-9 resultsOwed">{{model.detail.data[0].s}}  {{model.detail.data[0].o}} </div> 
-  <div ng-if='model.detail.data[0].q !== "undefined"'class="col-md-9 resultsOwed">{{model.detail.data[1].s}}  {{model.detail.data[1].o}} </div>
-  <div ng-if='model.detail.data[0].q !== "undefined"'class="col-md-9 resultsOwed">{{model.detail.data[2].s}}  {{model.detail.data[2].o}} </div>
-<div>
+  <div ng-repeat='d in model.detail.data'>{{d.s.toString().slice(28,50)}} owed revenue for {{d.o.toString().slice(28,50)}} </div>
 
 </div>
