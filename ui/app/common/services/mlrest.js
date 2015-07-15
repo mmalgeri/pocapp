@@ -54,6 +54,7 @@
         var snippet = 'compact';
         var sort = null;
         var start = 1;
+        var mydata = "extract-document-data";
 
 
         (function init(){

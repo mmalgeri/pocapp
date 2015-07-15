@@ -34,6 +34,11 @@
   <search:sort-order direction="descending">
     <search:score/>
   </search:sort-order>
+
+  <search:extract-document-data selected="all">
+      <search:extract-path>/actorName</search:extract-path>
+  </search:extract-document-data>
+
   <search:transform-results apply="snippet">
     <search:preferred-elements><search:element ns="" name="body"/></search:preferred-elements>
     <search:max-matches>1</search:max-matches>
