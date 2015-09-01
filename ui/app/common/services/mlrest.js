@@ -298,6 +298,15 @@
                 params: options
               });
           },
+          taxIncentives: function(doc, options) {
+            // send a POST request to /application/custom/sjs/taxIncentives.sjs
+            return $http.post(
+              '/application/custom/sjs/taxIncentives.sjs',
+              doc,
+              {
+                params: options
+              });
+          },
           createSentiment: function(doc, options) {
             // send a POST request to /application/custom/loadTweetSentiments.xqy
             return $http.post(

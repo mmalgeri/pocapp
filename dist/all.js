@@ -2,7 +2,7 @@
 angular.module('sample', [
   'ngRoute', 'ngCkeditor', 'sample.user', 'sample.search', 'sample.common', 'sample.detail',
   'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.createTriples', 
-  'sample.loadData', 'sample.getReviews', 'sample.owedRevenue'
+  'sample.loadData', 'sample.getReviews', 'sample.owedRevenue', 'sample.taxIncentives'
 ])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
@@ -40,6 +40,10 @@ angular.module('sample', [
       .when('/owedRevenue', {
         templateUrl: '/owedRevenue/owedRevenue.html',
         controller: 'OwedRevenueCtrl'
+      })
+      .when('/taxIncentives', {
+        templateUrl: '/taxIncentives/taxIncentives.html',
+        controller: 'TaxIncentivesCtrl'
       })
       .otherwise({
         redirectTo: '/'
@@ -624,6 +628,30 @@ angular.module('sample.search', []);
 (function () {
   'use strict';
 
+  angular.module('sample.taxIncentives')
+    .controller('TaxIncentivesCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
+      var model = { 
+        detail: {},   
+        user: user
+      };
+
+      angular.extend($scope, {
+        model: model,
+        submit: function() {
+          mlRest.taxIncentives($scope.model.user).then(function(response) {
+            model.detail = response;
+            
+          });
+        }
+      });
+    }]);
+}());
+
+angular.module('sample.owedRevenue', []);
+
+(function () {
+  'use strict';
+
   angular.module('sample.user')
     .controller('ProfileCtrl', ['$scope', 'MLRest', 'User', '$location', function ($scope, mlRest, user, $location) {
       var model = {
@@ -1070,6 +1098,15 @@ angular.module('sample.user', ['sample.common']);
             // send a POST request to /application/custom/sjs/owedRevenue.sjs
             return $http.post(
               '/application/custom/sjs/owedRevenue.sjs',
+              doc,
+              {
+                params: options
+              });
+          },
+          taxIncentives: function(doc, options) {
+            // send a POST request to /application/custom/sjs/taxIncentives.sjs
+            return $http.post(
+              '/application/custom/sjs/taxIncentives.sjs',
               doc,
               {
                 params: options

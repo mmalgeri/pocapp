@@ -24,3 +24,4 @@ xdmp.setResponseContentType("text/html");
 //result.addElement("HTML",String(resStr),"http://www.w3.org/1999/xhtml");
 //result.toNode();
 resArray;
+

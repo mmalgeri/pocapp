@@ -2,7 +2,7 @@
 angular.module('sample', [
   'ngRoute', 'ngCkeditor', 'sample.user', 'sample.search', 'sample.common', 'sample.detail',
   'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.createTriples', 
-  'sample.loadData', 'sample.getReviews', 'sample.owedRevenue'
+  'sample.loadData', 'sample.getReviews', 'sample.owedRevenue', 'sample.taxIncentives'
 ])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
@@ -40,6 +40,10 @@ angular.module('sample', [
       .when('/owedRevenue', {
         templateUrl: '/owedRevenue/owedRevenue.html',
         controller: 'OwedRevenueCtrl'
+      })
+      .when('/taxIncentives', {
+        templateUrl: '/taxIncentives/taxIncentives.html',
+        controller: 'TaxIncentivesCtrl'
       })
       .otherwise({
         redirectTo: '/'
