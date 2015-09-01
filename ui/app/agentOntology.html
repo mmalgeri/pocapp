@@ -1,26 +1,9 @@
-PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-<BR>
-PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
-<BR>
-PREFIX dbpedia-owl:	<http://dbpedia.org/ontology/>
-<BR>
-PREFIX wb:	<http://wb.com/props#>
-<BR><BR>
-<BR>
-INSERT DATA 
-<BR>
-{ 
+
 <BR><BR>
 hasRightsTo <B>subPropertyOf</B>	     owedRevenueFrom .
-<BR>
+<BR><BR>
 wrote	<B>subPropertyOf</B>	hasRightsTo .
-<BR>
+<BR><BR>
 coWrote	<B>subPropertyOf</B>	wrote . 
 <BR><BR>
-Agent <B>subClassOf</B> Family		 .
-<BR>
-Agent <B>subClassOf</B> Person.
-<BR>
-Agent <B>subClassOf</B> Organisation		 .
-<BR>
-}
+

@@ -21,6 +21,7 @@ function twLoadTweetsForTop10Movies (tAndI, accessId) {
   var tweetCount;
   var movieId;
   var aTweet;
+  var aTweeter;
   var aTweetObj;
   var docName;
   var date;
@@ -57,10 +58,11 @@ function twLoadTweetsForTop10Movies (tAndI, accessId) {
       try {
       aTweet = tweetPackage.statuses[j].text;
       aTweet = xdmp.urlEncode(aTweet);
+      aTweeter = tweetPackage.statuses[j].user.screen_name;
       
       query = query.replace(/\+/g, " ");
       aTweetObj = aTweet.replace(/\+/g," ");
-      aTweetObj = '{ "tweet"' + ':' + '"' + aTweetObj + '"' + ',' + '"movieId"'+ ':' + '"' + movieId + '"' + ',' + '"movieTitle"' + ':' + '"' + query + '"' + '}';
+      aTweetObj = '{ "tweet"' + ':' + '"' + aTweetObj + '"' + ',' + '"movieId"'+ ':' + '"' + movieId + '"' + ',' + '"movieTitle"' + ':' + '"' + query + '"' + ',' + '"tweeter"'+ ':' + '"' + aTweeter + '"' + '}';
       aTweetObj = cleanString(aTweetObj);
       aTweetObj = JSON.parse(aTweetObj);
       aTweetObj.modeFlag = 'movieTweetMode';

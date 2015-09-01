@@ -30,6 +30,7 @@ function twLoadTweetsForTop10Actors (aArray, accessId) {
   var tweetCount;
   var actorId;
   var aTweet;
+  var aTweeter;
   var docName;
   var date;
   accessId = "Bearer " + accessId;
@@ -68,10 +69,12 @@ function twLoadTweetsForTop10Actors (aArray, accessId) {
       try {
       aTweet = tweetPackage.statuses[j].text;
       aTweet = xdmp.urlEncode(aTweet);
+      aTweeter = tweetPackage.statuses[j].user.screen_name;
       
       query = query.replace(/\+/g, " ");
       aTweet = aTweet.replace(/\+/g, " ");
-      aTweet = '{ "tweet"' + ':' + '"' + aTweet + '"' + ',' + '"actorId"'+ ':' + '"' + actorId + '"' + ',' + '"actorName"' + ':' + '"' + query + '"' + '}';
+      aTweeter = aTweeter.replace(/\+/g, " ");
+      aTweet = '{ "tweet"' + ':' + '"' + aTweet + '"' + ',' + '"actorId"'+ ':' + '"' + actorId + '"' + ',' + '"actorName"' + ':' + '"' + query + '"' + ',' + '"tweeter"'+ ':' + '"' + aTweeter + '"' + '}';
       aTweet = cleanString(aTweet);
       aTweet = JSON.parse(aTweet);
       aTweet.modeFlag = 'actorTweetMode';

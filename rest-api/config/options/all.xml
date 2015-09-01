@@ -66,7 +66,7 @@
   </search:operator>
   <search:annotation xmlns="http://marklogic.com/appservices/search">Delta options here</search:annotation>
 
-  <search:constraint name="Top 10 Movies">
+  <search:constraint name="Top10">
     <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/">
       <search:facet-option>limit=10</search:facet-option>
       <search:facet-option>frequency-order</search:facet-option>
@@ -84,7 +84,7 @@
     </search:range>
   </search:constraint>
 
-  <search:constraint name="Reviews from Critics">
+  <search:constraint name="Reviews">
     <search:range type="xs:string" facet="true" collation="http://marklogic.com/collation/">
       <search:facet-option>limit=10</search:facet-option>
       <search:facet-option>frequency-order</search:facet-option>

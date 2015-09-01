@@ -74,8 +74,6 @@ function addTheMovieDbTriples (anActor){
   tmdbTripleArray.push(tmdbTriple);
   tmdbTriple = sem.triple(sem.iri(actorName), sem.iri("hasImdbIdUrl"), tmdbActorImdbUrl);
   tmdbTripleArray.push(tmdbTriple);
-
-  http://www.imdb.com/name/nm1663205
   
   anActor.tmdbTriples = tmdbTripleArray;
   return anActor;
@@ -85,7 +83,7 @@ function addTheMovieDbTriples (anActor){
 function rtLoadTopMovieActorsWithTriples( ids, movies ) {
 var apikey = "ek43fd5d4pgnkr44m24de9wr";
 
-  for (i=0; i<10; i++) {
+  for (i=0; i<5; i++) {
     try {
     var uri = fn.concat("http://api.rottentomatoes.com/api/public/v1.0/movies/",ids[i],"/cast.json?apikey=",apikey);
     var movieInfoItr = xdmp.httpGet(uri, {format:'json'});
@@ -95,18 +93,20 @@ var apikey = "ek43fd5d4pgnkr44m24de9wr";
     movieInfo = movieInfoItr.next();
     var movieCast = movieInfo.value.toObject().cast;
     
-    for (j=0; j<movieCast.length; j++) {
+    //for (j=0; j<movieCast.length; j++) {
+    for (j=0; j<5; j++) {
       try {
       var actor = movieCast[j];
       actor = addIdInfo(actor, ids[i],movies[i]);
       actor = addRtTriples(actor, ids[i],movies[i]);
       actor = addTheMovieDbTriples(actor);
       actor = addDbpediaTriples(actor);
+      xdmp.sleep(100);
       }
       catch(err){
         xdmp.log ("error in adding info and triples " + err);
-        var docName = fn.concat('Actor__Info-',actor.id,'-',ids[i],'.json');
-        xdmp.documentInsert(docName ,actor, null,"actor");
+        //var docName = fn.concat('Actor__Info-',actor.id,'-',ids[i],'.json');
+        //xdmp.documentInsert(docName ,actor, null,"actor");
         continue;
       }
       
