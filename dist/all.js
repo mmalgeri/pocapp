@@ -647,7 +647,7 @@ angular.module('sample.search', []);
     }]);
 }());
 
-angular.module('sample.owedRevenue', []);
+angular.module('sample.taxIncentives', []);
 
 (function () {
   'use strict';

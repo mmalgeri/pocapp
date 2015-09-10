@@ -6,4 +6,9 @@
 <BR><BR>
 <div>Visit <B>{{model.detail.actorName}}</B> at <a href="{{model.detail.tmdbTriples[2].triple.object.value}}" target="_BLANK">IMDB</a></div>
 <BR><BR>
-<div>Browse <B>{{model.detail.actorName}}</B> at <a ng-href='http://localhost:8020/application/LodLive/tester.html?name={{model.detail.actorName}}'> DBPedia</a></div>
+<div> <B>{{model.detail.actorName}}</B> Info at
+	<!--<a ng-href='http://localhost:8020/application/LodLive/tester.html?name={{model.detail.actorName}}'> DBPedia</a>-->
+<a ng-href='http://dbpedia.org/page/{{model.detail.actorName.replace(" ","_")}}' target="_BLANK">DBPedia</a>
+<BR>
+<a ng-href='http://dbpedia.org/data/{{model.detail.actorName.replace(" ","_")}}.json' target="_BLANK">src</a>
+	</div>

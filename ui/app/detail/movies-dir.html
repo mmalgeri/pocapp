@@ -12,8 +12,12 @@
 <div>Audience rated this movie <B>{{model.detail.ratings.audience_rating}}</B> with a score of <B>{{model.detail.ratings.audience_score}}</B></div>
 <BR><BR>
 <div>
-<div ng-if="model.detail.title !== 'Furious 7'">Try browsing <B>{{model.detail.title}} </B>at <a ng-href='http://localhost:8020/application/LodLive/tester.html?name={{model.detail.title}}_(film)'>DBPedia</a></div>
-<div ng-if="model.detail.title == 'Furious 7'">Try semantic browsing at <a ng-href='http://localhost:8020/application/LodLive/tester.html?name=The_Fast_and_the_Furious'>DBPedia</a></div>
+<div>Try browsing <B>{{model.detail.title}} </B>at 
+	<!--<a ng-href='http://localhost:8020/application/LodLive/tester.html?name={{model.detail.title}}_(film)'>DBPedia</a>-->
+<a ng-href='http://dbpedia.org/page/{{model.detail.title.replace(" ","_").replace(" ","_").replace(" ","_")}}_(film)' target="_BLANK">DBPedia</a>
+<BR>
+<a ng-href='http://dbpedia.org/data/{{model.detail.title.replace(" ","_").replace(" ","_").replace(" ","_")}}_(film).json' target="_BLANK">src</a>
+</div>
 </div>
 
 
