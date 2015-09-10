@@ -2,7 +2,7 @@
 angular.module('sample', [
   'ngRoute', 'ngCkeditor', 'sample.user', 'sample.search', 'sample.common', 'sample.detail',
   'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.createTriples', 
-  'sample.loadData', 'sample.getReviews', 'sample.owedRevenue', 'sample.taxIncentives'
+  'sample.loadData', 'sample.getReviews', 'sample.owedRevenue', 'sample.taxIncentives', 'sample.brandRevenue', 'sample.lifestyleRevenue'
 ])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
@@ -45,6 +45,14 @@ angular.module('sample', [
         templateUrl: '/taxIncentives/taxIncentives.html',
         controller: 'TaxIncentivesCtrl'
       })
+      .when('/brandRevenue', {
+        templateUrl: '/brandRevenue/brandRevenue.html',
+        controller: 'BrandRevenueCtrl'
+      })
+      .when('/lifestyleRevenue', {
+        templateUrl: '/lifestyleRevenue/lifestyleRevenue.html',
+        controller: 'LifestyleRevenueCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
@@ -52,6 +60,180 @@ angular.module('sample', [
   .filter('decode', function() {
     return window.decodeURIComponent;
   });
+
+(function () {
+  'use strict';
+
+  angular.module('sample.brandRevenue')
+    .controller('BrandRevenueCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
+      var model = { 
+        detail: {},   
+        user: user
+      };
+
+      angular.extend($scope, {
+        model: model,
+        submit: function() {
+          mlRest.brandRevenue($scope.model.user).then(function(response) {
+            model.detail = response;
+            
+          });
+        }
+      });
+    }]);
+}());
+
+angular.module('sample.brandRevenue', []);
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('actors', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/actors-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('adhoc', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/adhoc-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+  'use strict';
+
+  angular.module('sample.detail')
+    .controller('DetailCtrl', ['$scope', 'MLRest', '$routeParams', function ($scope, mlRest, $routeParams) {
+      var uri = $routeParams.uri;
+      var model = {
+        // your model stuff here
+        detail: {}
+      };
+      
+
+
+      mlRest.getDocument(uri, { format: 'json' }).then(function(response) {
+        
+        model.detail = response.data;
+
+   /*     if (model.detail.tweet !== undefined) {
+          model.mode = 'tweet';
+          console.log('mode is tweet'); 
+        } else if (model.detail.reviews !== undefined) {
+          model.mode = 'review';
+          console.log('mode is review');
+        }
+          else if (model.detail.runtime !== undefined) {
+          model.mode = 'movie';
+          console.log('mode is movie');
+        }
+          else {
+          model.mode = 'actor';
+          console.log('mode is actor');
+  */
+
+          if ((model.detail.modeFlag === 'actorTweetMode')|| (model.detail.modeFlag === 'movieTweetMode')){
+          model.mode = 'tweet';
+          console.log('mode is tweet'); 
+        } else if (model.detail.modeFlag === 'reviewMode') {
+          model.mode = 'review';
+          console.log('mode is review');
+        }
+          else if (model.detail.modeFlag === 'movieMode') {
+          model.mode = 'movie';
+          console.log('mode is movie');
+        }
+        else if (model.detail.modeFlag === 'adHocMode') {
+          model.mode = 'actor';
+          console.log('mode is adhoc but setting directive to actor for now');
+        }
+          else {
+          model.mode = 'actor';
+          console.log('mode is actor');
+
+        }
+        
+      }); 
+
+      angular.extend($scope, {
+        model: model
+
+      });
+    }]);
+}());
+
+
+angular.module('sample.detail', []);
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('movies', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/movies-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('reviews', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/reviews-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('tweets', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/tweets-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('tweetsmovies', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/tweetsmovies-dir.html'
+    };
+  }]);
+}());
 
 
 var module = angular.module('sample.common', []);
@@ -312,154 +494,28 @@ angular.module('sample.getReviews', []);
 angular.module('sample.loadData', []);
 
 (function () {
-
   'use strict';
 
-  var module = angular.module('sample.detail');
-
-  module.directive('actors', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/actors-dir.html'
-    };
-  }]);
-}());
-
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.detail');
-
-  module.directive('adhoc', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/adhoc-dir.html'
-    };
-  }]);
-}());
-
-(function () {
-  'use strict';
-
-  angular.module('sample.detail')
-    .controller('DetailCtrl', ['$scope', 'MLRest', '$routeParams', function ($scope, mlRest, $routeParams) {
-      var uri = $routeParams.uri;
-      var model = {
-        // your model stuff here
-        detail: {}
+  angular.module('sample.owedRevenue')
+    .controller('OwedRevenueCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
+      var model = { 
+        detail: {},   
+        user: user
       };
-      
-
-
-      mlRest.getDocument(uri, { format: 'json' }).then(function(response) {
-        
-        model.detail = response.data;
-
-   /*     if (model.detail.tweet !== undefined) {
-          model.mode = 'tweet';
-          console.log('mode is tweet'); 
-        } else if (model.detail.reviews !== undefined) {
-          model.mode = 'review';
-          console.log('mode is review');
-        }
-          else if (model.detail.runtime !== undefined) {
-          model.mode = 'movie';
-          console.log('mode is movie');
-        }
-          else {
-          model.mode = 'actor';
-          console.log('mode is actor');
-  */
-
-          if ((model.detail.modeFlag === 'actorTweetMode')|| (model.detail.modeFlag === 'movieTweetMode')){
-          model.mode = 'tweet';
-          console.log('mode is tweet'); 
-        } else if (model.detail.modeFlag === 'reviewMode') {
-          model.mode = 'review';
-          console.log('mode is review');
-        }
-          else if (model.detail.modeFlag === 'movieMode') {
-          model.mode = 'movie';
-          console.log('mode is movie');
-        }
-        else if (model.detail.modeFlag === 'adHocMode') {
-          model.mode = 'actor';
-          console.log('mode is adhoc but setting directive to actor for now');
-        }
-          else {
-          model.mode = 'actor';
-          console.log('mode is actor');
-
-        }
-        
-      }); 
 
       angular.extend($scope, {
-        model: model
-
+        model: model,
+        submit: function() {
+          mlRest.owedRevenue($scope.model.user).then(function(response) {
+            model.detail = response;
+            
+          });
+        }
       });
     }]);
 }());
 
-
-angular.module('sample.detail', []);
-
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.detail');
-
-  module.directive('movies', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/movies-dir.html'
-    };
-  }]);
-}());
-
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.detail');
-
-  module.directive('reviews', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/reviews-dir.html'
-    };
-  }]);
-}());
-
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.detail');
-
-  module.directive('tweets', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/tweets-dir.html'
-    };
-  }]);
-}());
-
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.detail');
-
-  module.directive('tweetsmovies', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/tweetsmovies-dir.html'
-    };
-  }]);
-}());
+angular.module('sample.owedRevenue', []);
 
 (function () {
   'use strict';
@@ -1107,6 +1163,24 @@ angular.module('sample.user', ['sample.common']);
             // send a POST request to /application/custom/sjs/taxIncentives.sjs
             return $http.post(
               '/application/custom/sjs/taxIncentives.sjs',
+              doc,
+              {
+                params: options
+              });
+          },
+          brandRevenue: function(doc, options) {
+            // send a POST request to /application/custom/sjs/brandRevenue.sjs
+            return $http.post(
+              '/application/custom/sjs/brandRevenue.sjs',
+              doc,
+              {
+                params: options
+              });
+          },
+          lifestyleRevenue: function(doc, options) {
+            // send a POST request to /application/custom/sjs/lifestyleRevenue.sjs
+            return $http.post(
+              '/application/custom/sjs/lifestyleRevenue.sjs',
               doc,
               {
                 params: options

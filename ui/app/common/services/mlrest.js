@@ -307,6 +307,24 @@
                 params: options
               });
           },
+          brandRevenue: function(doc, options) {
+            // send a POST request to /application/custom/sjs/brandRevenue.sjs
+            return $http.post(
+              '/application/custom/sjs/brandRevenue.sjs',
+              doc,
+              {
+                params: options
+              });
+          },
+          lifestyleRevenue: function(doc, options) {
+            // send a POST request to /application/custom/sjs/lifestyleRevenue.sjs
+            return $http.post(
+              '/application/custom/sjs/lifestyleRevenue.sjs',
+              doc,
+              {
+                params: options
+              });
+          },
           createSentiment: function(doc, options) {
             // send a POST request to /application/custom/loadTweetSentiments.xqy
             return $http.post(

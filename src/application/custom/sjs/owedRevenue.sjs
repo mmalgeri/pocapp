@@ -8,10 +8,11 @@ PREFIX dbpedia-owl:	<http://dbpedia.org/ontology/> \n\
 PREFIX owl: <http://www.w3.org/2002/07/owl#> \n\
 PREFIX wb:	<http://wb.com/props#> \n\
  \n\
-SELECT ?s ?o \n\
+SELECT ?s ?p ?o \n\
 WHERE  \n\
 {  \n\
     ?s wb:owedRevenueFrom ?o . \n\
+    BIND (wb:owedRevenueFrom AS ?p) \n\
 } \n\
 ",[],[],store);
 

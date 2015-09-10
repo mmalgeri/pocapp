@@ -3,14 +3,5 @@
 <h3 ng-show="total === 0">No results to show</h3>
 <div ng-repeat="result in results">	
 
-<div ng-if="result.uri.match('Actor_Tweet')">
-  <h4><a ng-href="/detail?uri={{result.uri}}">An actor tweet</a></h4>
-  <div class="matches">
-    <div ng-repeat="match in result.matches">
-      <div ng-repeat="text in match['match-text']">{{text | decode}}</div>
-    </div>
-  </div>
- </div>
-
 </div>
 	

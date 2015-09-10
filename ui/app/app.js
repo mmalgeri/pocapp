@@ -2,7 +2,7 @@
 angular.module('sample', [
   'ngRoute', 'ngCkeditor', 'sample.user', 'sample.search', 'sample.common', 'sample.detail',
   'ui.bootstrap', 'gd.ui.jsonexplorer', 'sample.create', 'sample.createTriples', 
-  'sample.loadData', 'sample.getReviews', 'sample.owedRevenue', 'sample.taxIncentives'
+  'sample.loadData', 'sample.getReviews', 'sample.owedRevenue', 'sample.taxIncentives', 'sample.brandRevenue', 'sample.lifestyleRevenue'
 ])
   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 
@@ -44,6 +44,14 @@ angular.module('sample', [
       .when('/taxIncentives', {
         templateUrl: '/taxIncentives/taxIncentives.html',
         controller: 'TaxIncentivesCtrl'
+      })
+      .when('/brandRevenue', {
+        templateUrl: '/brandRevenue/brandRevenue.html',
+        controller: 'BrandRevenueCtrl'
+      })
+      .when('/lifestyleRevenue', {
+        templateUrl: '/lifestyleRevenue/lifestyleRevenue.html',
+        controller: 'LifestyleRevenueCtrl'
       })
       .otherwise({
         redirectTo: '/'
