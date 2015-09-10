@@ -1,0 +1,15 @@
+<div class="create" ng-show="model.user.authenticated">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <h2 class="col-sm-10">Potential Brands for Partnerships</h2>
+  </div>
+  <form class="form-horizontal">
+    <div class="row">
+      <a class="col-sm-offset-9 col-sm-1" href="/">Cancel</a>
+      <button class="col-sm-2 btn btn-primary" ng-click="submit()">Submit</button>
+    </div>
+  </form>
+
+  <div ng-repeat='d in model.detail.data'>{{d.s.toString().slice(28,50)}} {{d.p.toString().slice(20,50)}} from {{d.o.toString().slice(28,50)}} </div>
+
+</div>
