@@ -16,12 +16,17 @@ let $uri :=fn:concat("https://twitter.com/search?q=",$topic,"%20",$sentiment,"&a
 
 let $dirty-tweets := xdmp:http-get($uri)[2]
 let $clean-tweets := <html:tweets>{xdmp:tidy($dirty-tweets)//html:p[@class = "js-tweet-text"]}</html:tweets>
-let $highlight := cts:highlight(cts:highlight($clean-tweets, $topic, <Topic>{$cts:text}</Topic>), $sentiment, <Sentiment>{$cts:text}</Sentiment>)
+
+
+let $highlight := if ($posOrNeg eq "positive") then 
+			cts:highlight(cts:highlight($clean-tweets, $topic, <Topic>{$cts:text}</Topic>), $sentiment, <posSentiment>{$cts:text}</posSentiment>)
+		else
+			cts:highlight(cts:highlight($clean-tweets, $topic, <Topic>{$cts:text}</Topic>), $sentiment, <negSentiment>{$cts:text}</negSentiment>)
 
 for $doc at $idx in $highlight/html:p
    return
 (
-
+   xdmp:log($sentiment),xdmp:log($topic),xdmp:log($posOrNeg),
    xdmp:document-insert(fn:concat("tweet-", $idx, "-", $topic, "-", $sentiment,".xml"),$doc,(), "tweetsSentiments"),
    xdmp:redirect-response($home)
 )

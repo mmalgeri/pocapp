@@ -12,8 +12,7 @@ PREFIX si:	<http://si.gov/si:> \n\
 SELECT ?s ?o \n\
 WHERE  \n\
 {  \n\
-    ?s si:hasTaxIncentives ?o . \n\
-    FILTER(regex(?s,'film')) \n\
+    ?s si:hasTaxIncentives ?o  \n\
 } \n\
 ",[],[],store);
 

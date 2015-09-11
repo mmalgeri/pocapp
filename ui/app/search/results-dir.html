@@ -54,5 +54,16 @@
   </div>
  </div>
 
+ <div ng-if="result.uri.match('tweet-')">
+  <h4><a ng-href="/detail?uri={{result.uri}}">Sentiment tweet for {{result.matches[0].match-text[1].highlight}}</a></h4>
+  <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json">src</a></div>
+  <div class="matches">
+    <div ng-repeat="match in result.matches">
+      <!--<div ng-repeat="text in match['match-text']">{{text | decode}}</div> -->
+      <div>{{result.extracted.content[0].synopsis}}</div>
+    </div>
+  </div>
+ </div>
+
 </div>
 	
