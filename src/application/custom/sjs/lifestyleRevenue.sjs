@@ -10,9 +10,9 @@ PREFIX wb:	<http://wb.com/props#> \n\
  \n\
 SELECT ?s ?p ?o \n\
 WHERE  \n\
-{  \n\
-    ?s wb:actingCool  ?o.  \n\
-BIND (wb:actingCool AS ?p) \n\
+{ \n\
+    ?s wb:lifeStyleRevenue  ?o.  \n\
+BIND (wb:lifeStyleRevenue AS ?p). \n\
 } \n\
 ",[],[],store);
 

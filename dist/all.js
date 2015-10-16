@@ -61,6 +61,21 @@ angular.module('sample', [
     return window.decodeURIComponent;
   });
 
+
+var module = angular.module('sample.common', []);
+
+
+module.filter('object2Array', function() {
+	'use strict';
+  return function(input) {
+    var out = [];
+    for (var name in input) {
+    	input[name].__key = name;
+      out.push(input[name]);
+    }
+    return out;
+  };
+});
 (function () {
   'use strict';
 
@@ -85,171 +100,6 @@ angular.module('sample', [
 
 angular.module('sample.brandRevenue', []);
 
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.detail');
-
-  module.directive('actors', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/actors-dir.html'
-    };
-  }]);
-}());
-
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.detail');
-
-  module.directive('adhoc', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/adhoc-dir.html'
-    };
-  }]);
-}());
-
-(function () {
-  'use strict';
-
-  angular.module('sample.detail')
-    .controller('DetailCtrl', ['$scope', 'MLRest', '$routeParams', function ($scope, mlRest, $routeParams) {
-      var uri = $routeParams.uri;
-      var model = {
-        // your model stuff here
-        detail: {}
-      };
-      
-
-
-      mlRest.getDocument(uri, { format: 'json' }).then(function(response) {
-        
-        model.detail = response.data;
-
-   /*     if (model.detail.tweet !== undefined) {
-          model.mode = 'tweet';
-          console.log('mode is tweet'); 
-        } else if (model.detail.reviews !== undefined) {
-          model.mode = 'review';
-          console.log('mode is review');
-        }
-          else if (model.detail.runtime !== undefined) {
-          model.mode = 'movie';
-          console.log('mode is movie');
-        }
-          else {
-          model.mode = 'actor';
-          console.log('mode is actor');
-  */
-
-          if ((model.detail.modeFlag === 'actorTweetMode')|| (model.detail.modeFlag === 'movieTweetMode')){
-          model.mode = 'tweet';
-          console.log('mode is tweet'); 
-        } else if (model.detail.modeFlag === 'reviewMode') {
-          model.mode = 'review';
-          console.log('mode is review');
-        }
-          else if (model.detail.modeFlag === 'movieMode') {
-          model.mode = 'movie';
-          console.log('mode is movie');
-        }
-        else if (model.detail.modeFlag === 'adHocMode') {
-          model.mode = 'actor';
-          console.log('mode is adhoc but setting directive to actor for now');
-        }
-          else {
-          model.mode = 'actor';
-          console.log('mode is actor');
-
-        }
-        
-      }); 
-
-      angular.extend($scope, {
-        model: model
-
-      });
-    }]);
-}());
-
-
-angular.module('sample.detail', []);
-
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.detail');
-
-  module.directive('movies', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/movies-dir.html'
-    };
-  }]);
-}());
-
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.detail');
-
-  module.directive('reviews', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/reviews-dir.html'
-    };
-  }]);
-}());
-
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.detail');
-
-  module.directive('tweets', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/tweets-dir.html'
-    };
-  }]);
-}());
-
-(function () {
-
-  'use strict';
-
-  var module = angular.module('sample.detail');
-
-  module.directive('tweetsmovies', [function () {
-    return {
-      restrict: 'E',
-      templateUrl: '/detail/tweetsmovies-dir.html'
-    };
-  }]);
-}());
-
-
-var module = angular.module('sample.common', []);
-
-
-module.filter('object2Array', function() {
-	'use strict';
-  return function(input) {
-    var out = [];
-    for (var name in input) {
-    	input[name].__key = name;
-      out.push(input[name]);
-    }
-    return out;
-  };
-});
 // Copied from https://docs.angularjs.org/api/ng/service/$compile
 angular.module('sample.create')
   .directive('compile', function($compile) {
@@ -494,10 +344,160 @@ angular.module('sample.getReviews', []);
 angular.module('sample.loadData', []);
 
 (function () {
+
   'use strict';
 
-  angular.module('sample.owedRevenue')
-    .controller('OwedRevenueCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
+  var module = angular.module('sample.detail');
+
+  module.directive('actors', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/actors-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('adhoc', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/adhoc-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+  'use strict';
+
+  angular.module('sample.detail')
+    .controller('DetailCtrl', ['$scope', 'MLRest', '$routeParams', function ($scope, mlRest, $routeParams) {
+      var uri = $routeParams.uri;
+      var model = {
+        // your model stuff here
+        detail: {}
+      };
+      
+
+
+      mlRest.getDocument(uri, { format: 'json' }).then(function(response) {
+        
+        model.detail = response.data;
+
+   /*     if (model.detail.tweet !== undefined) {
+          model.mode = 'tweet';
+          console.log('mode is tweet'); 
+        } else if (model.detail.reviews !== undefined) {
+          model.mode = 'review';
+          console.log('mode is review');
+        }
+          else if (model.detail.runtime !== undefined) {
+          model.mode = 'movie';
+          console.log('mode is movie');
+        }
+          else {
+          model.mode = 'actor';
+          console.log('mode is actor');
+  */
+
+          if ((model.detail.modeFlag === 'actorTweetMode')|| (model.detail.modeFlag === 'movieTweetMode')){
+          model.mode = 'tweet';
+          console.log('mode is tweet'); 
+        } else if (model.detail.modeFlag === 'reviewMode') {
+          model.mode = 'review';
+          console.log('mode is review');
+        }
+          else if (model.detail.modeFlag === 'movieMode') {
+          model.mode = 'movie';
+          console.log('mode is movie');
+        }
+        else if (model.detail.modeFlag === 'adHocMode') {
+          model.mode = 'actor';
+          console.log('mode is adhoc but setting directive to actor for now');
+        }
+          else {
+          model.mode = 'actor';
+          console.log('mode is actor');
+
+        }
+        
+      }); 
+
+      angular.extend($scope, {
+        model: model
+
+      });
+    }]);
+}());
+
+
+angular.module('sample.detail', []);
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('movies', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/movies-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('reviews', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/reviews-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('tweets', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/tweets-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+
+  'use strict';
+
+  var module = angular.module('sample.detail');
+
+  module.directive('tweetsmovies', [function () {
+    return {
+      restrict: 'E',
+      templateUrl: '/detail/tweetsmovies-dir.html'
+    };
+  }]);
+}());
+
+(function () {
+  'use strict';
+
+  angular.module('sample.lifestyleRevenue')
+    .controller('LifestyleRevenueCtrl', ['$scope', 'MLRest', '$window', 'User', function ($scope, mlRest, win, user) {
       var model = { 
         detail: {},   
         user: user
@@ -506,7 +506,7 @@ angular.module('sample.loadData', []);
       angular.extend($scope, {
         model: model,
         submit: function() {
-          mlRest.owedRevenue($scope.model.user).then(function(response) {
+          mlRest.lifestyleRevenue($scope.model.user).then(function(response) {
             model.detail = response;
             
           });
@@ -515,7 +515,7 @@ angular.module('sample.loadData', []);
     }]);
 }());
 
-angular.module('sample.owedRevenue', []);
+angular.module('sample.lifestyleRevenue', []);
 
 (function () {
   'use strict';

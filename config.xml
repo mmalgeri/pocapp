@@ -1,0 +1,5 @@
+<rest-api xmlns="http://marklogic.com/rest-api">
+  <name>sony</name>
+  <database>sony-db</database>
+  <port>7744</port>
+</rest-api>

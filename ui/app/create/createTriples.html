@@ -1,25 +1,33 @@
 <div class="create" ng-show="model.user.authenticated">
+Location: <input type="checkbox" ng-model="location" >&emsp;
+LifeStyle: <input type="checkbox" ng-model="lifeStyle" >&emsp;
+Brand: <input type="checkbox" ng-model="brand" >&emsp;
+IP: <input type="checkbox" ng-model="cowrote" >&emsp;&emsp;&emsp;&emsp;
+Add State Incentive: <input type="checkbox" ng-model="addIncentive" >&emsp;
+Add Brand Program: <input type="checkbox" ng-model="addBrandProgram" ><br/>
+
+<div ng-if="location">
   <div class="row">
     <div class="col-sm-2"></div>
-    <h2 class="col-sm-10">Add Tags</h2>
+    <h2 class="col-sm-10">Enrich Content With Location Info</h2>
   </div>
   <form class="form-horizontal">
     <div class="form-group">
-      <label class="col-sm-2 control-label">Subject</label>
+      <label class="col-sm-2 control-label">Scene</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" placeholder="triple subject" ng-model="model.triple.subject">
+        <input type="text" class="form-control"  ng-model="model.triple.subject" >
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">Predicate</label>
+      
       <div class="col-sm-10">
-        <input class="form-control" ng-model="model.triple.predicate" placeholder="triple predicate"></input>
+        <input type="text" ng-if="location" class="form-control" ng-show="false" ng-model="model.triple.predicate"  ng-init="model.triple.predicate='location'"></input>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">Object</label>
+      <label class="col-sm-2 control-label">Scene location</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" ng-model="model.triple.object" placeholder="triple object">
+        <input type="text" class="form-control" ng-model="model.triple.object" >
       </div>
     </div>
     
@@ -29,4 +37,171 @@
       <button class="col-sm-2 btn btn-primary" ng-click="submit()">Submit</button>
     </div>
   </form>
+</div>
+
+<div ng-show="lifeStyle">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <h2 class="col-sm-10">Enrich Content With Lifestyle Info</h2>
+  </div>
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Subject</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control"  ng-model="model.triple.subject">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">LifeStyle</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" ng-model="model.triple.predicate" ng-init="model.triple.predicate='golfingIn'"></input>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Scene</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" ng-model="model.triple.object" >
+      </div>
+    </div>
+    
+
+    <div class="row">
+      <a class="col-sm-offset-9 col-sm-1" href="/">Cancel</a>
+      <button class="col-sm-2 btn btn-primary" ng-click="submit()">Submit</button>
+    </div>
+  </form>
+</div>
+
+<div ng-if="brand">
+  <div  class="row">
+    <div class="col-sm-2"></div>
+    <h2 class="col-sm-10">Enrich Content With Brand Info</h2>
+  </div>
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Scene</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control"  ng-model="model.triple.subject">
+      </div>
+    </div>
+    <div class="form-group">
+      
+      <div class="col-sm-10">
+        <input type="text" ng-if="brand" ng-show="false" ng-model="model.triple.predicate" ng-init="model.triple.predicate='hasLogo'" ></input>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Logo</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" ng-model="model.triple.object" >
+      </div>
+    </div>
+    
+
+    <div class="row">
+      <a class="col-sm-offset-9 col-sm-1" href="/">Cancel</a>
+      <button class="col-sm-2 btn btn-primary" ng-click="submit()">Submit</button>
+    </div>
+  </form>
+ </div >
+
+ <div ng-if="cowrote">
+  <div  class="row">
+    <div class="col-sm-2"></div>
+    <h2 class="col-sm-10">Enrich Content With IP Info</h2>
+  </div>
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Person</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control"  ng-model="model.triple.subject">
+      </div>
+    </div>
+    <div class="form-group">
+      
+      <div class="col-sm-10">
+        <input type="text" ng-if="cowrote" ng-show="false" ng-model="model.triple.predicate" ng-init="model.triple.predicate='coWrote'" ></input>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Property</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" ng-model="model.triple.object" >
+      </div>
+    </div>
+    
+
+    <div class="row">
+      <a class="col-sm-offset-9 col-sm-1" href="/">Cancel</a>
+      <button class="col-sm-2 btn btn-primary" ng-click="submit()">Submit</button>
+    </div>
+  </form>
+ </div >
+
+ <div ng-if="addIncentive">
+  <div  class="row">
+    <div class="col-sm-2"></div>
+    <h2 class="col-sm-10">Add State With Tax Incentive</h2>
+  </div>
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">State</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control"  ng-model="model.triple.subject">
+      </div>
+    </div>
+    <div class="form-group">
+      
+      <div class="col-sm-10">
+        <input type="text" ng-if="addIncentive" ng-show="false" ng-model="model.triple.predicate" ng-init="model.triple.predicate='<http://si.gov/si:hasTaxIncentives>'" ></input>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Incentive</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" ng-model="model.triple.object" >
+      </div>
+    </div>
+    
+
+    <div class="row">
+      <a class="col-sm-offset-9 col-sm-1" href="/">Cancel</a>
+      <button class="col-sm-2 btn btn-primary" ng-click="submit()">Submit</button>
+    </div>
+  </form>
+ </div >
+
+ <div ng-if="addBrandProgram">
+  <div  class="row">
+    <div class="col-sm-2"></div>
+    <h2 class="col-sm-10">Add Corporate Brand Program</h2>
+  </div>
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Corporation</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control"  ng-model="model.triple.subject">
+      </div>
+    </div>
+    <div class="form-group">
+      
+      <div class="col-sm-10">
+        <input type="text" ng-if="addBrandProgram" ng-show="false" ng-model="model.triple.predicate" ng-init="model.triple.predicate='<http://corp.com/partner:hasProgram>'" ></input>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Brand Program</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" ng-model="model.triple.object" >
+      </div>
+    </div>
+    
+
+    <div class="row">
+      <a class="col-sm-offset-9 col-sm-1" href="/">Cancel</a>
+      <button class="col-sm-2 btn btn-primary" ng-click="submit()">Submit</button>
+    </div>
+  </form>
+ </div >
+
 </div>

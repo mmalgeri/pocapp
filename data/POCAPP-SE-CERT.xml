@@ -1,0 +1,2772 @@
+<export><workspace name="POCAPP-SE-CERT"><query name="twGetTweets" focus="false" active="true" content-source="as:12312185648792136379:" mode="javascript">// This function gets tweets based on a query
+// The code can be modified to pass in the query via a form
+// Prior to running this module, the user should have run twAuthenticate to get
+// an access token, which is used in the httpGet call, in the Authorization header
+function getTweets () {
+  
+  var query = xdmp.urlEncode("American Sniper");
+  
+  var myuri = fn.concat("https://api.twitter.com/1.1/search/tweets.json?q=",query);
+ 
+   
+  var tweetItr = xdmp.httpGet(myuri, 
+                              { "headers" : {
+                                "Authorization" : "Bearer AAAAAAAAAAAAAAAAAAAAACYkeQAAAAAAr%2F1pR0BhZF4yexQfADbDHbOHwdM%3DscxWJTjQ85vF1lj9AK7LXMLXLsmyOXDmV58kRLzOcJ68XCSUTZ"
+                                },
+                               "format" : "json"
+                              });
+var tweetPackage = tweetItr.next();
+tweetPackage = tweetItr.next().value.toObject();
+  
+var numTweets = tweetPackage.search_metadata.count;
+
+var tweetArray;
+  for (i = 0; i &lt; numTweets; i++) {
+    tweetArray[i] = tweetPackage.statuses[i].text;
+  }
+  return tweetArray;
+}
+
+getTweets();
+  
+    
+    
+
+</query><query name="twGetAccessToken" focus="false" active="true" content-source="as:12312185648792136379:" mode="javascript">// This function implements the twitter auth method for applications described here
+// https://dev.twitter.com/oauth/application-only
+// requires the user to create a sample app at twitter
+// and get a ConsumerKey and a Consumer Secret Key
+// The keys are urlEncode to future proof the code, should the format change
+// The consumerKey and the consumerKeyPrivate could be passed in via a form
+// The ouput of this call is used in the twGetAnyTweet Modules, and other modules that call
+// out to Twitter. It is used in the httpGet call in the Authorization header
+
+function twGetAccessToken () {
+  
+var consumerKey = "ABF833iUIPPJlQPxV1esHvszg";
+var consumerKeyPrivate = "BjFpDFXPktSfVuuxZygIPuYt1yw4rCNdEJfd7QxXG9hsFpIenk"
+
+var consumerKeyEncoded = xdmp.urlEncode(consumerKey);
+var consumerKeyPrivateEncoded = xdmp.urlEncode(consumerKeyPrivate);
+var preAccessToken = xdmp.base64Encode(fn.concat(consumerKeyEncoded,":",consumerKeyPrivateEncoded));
+
+
+preAccessToken = fn.concat("Basic ", preAccessToken);
+
+// This code uses the preAccessToken to get the actual access token, which is used in API calls
+var authKeyItr = xdmp.httpPost("https://api.twitter.com/oauth2/token",
+                            { 
+                             "headers" : {
+                                "Authorization" : preAccessToken,
+                                "Content-type"  : "application/x-www-form-urlencoded;charset=UTF-8"
+                                },
+                              "data": "grant_type=client_credentials"
+                              }
+                            );
+
+var accessToken = authKeyItr.next();
+accessToken = authKeyItr.next().value.toObject().access_token;
+return accessToken;
+}
+twGetAccessToken();</query><query name="deleteCollections" focus="false" active="true" content-source="as:12312185648792136379:" mode="javascript">declareUpdate();
+/*
+xdmp.collectionDelete("actor");
+xdmp.collectionDelete("tweets-movies");
+xdmp.collectionDelete("tweets-actors");
+xdmp.collectionDelete("top10");
+xdmp.collectionDelete("cast");
+xdmp.collectionDelete("review");
+xdmp.collectionDelete("/my/filmsAndActors");
+*/
+xdmp.collectionDelete("top10");
+
+</query><query name="getDBPediaInfo" focus="false" active="true" content-source="as:12312185648792136379:" mode="xquery">xquery version "1.0-ml";
+declare namespace pocappLib = "pocappLib";
+import module namespace json = "http://marklogic.com/xdmp/json" at "/MarkLogic/json/json.xqy";
+import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy";
+import module namespace spq = "http://www.w3.org/TR/sparql11-protocol/" at "/application/xquery/lib-spq.xqy"; 
+declare namespace sparql = "http://www.w3.org/2005/sparql-results#";
+declare namespace dbpprop = "http://dbpedia.org/property/";
+
+declare function pocappLib:getInfo($term as xs:string)
+{
+
+let $searchTerm := $term
+
+let $query := fn:concat("SELECT * 
+WHERE
+{
+   dbpedia:", $searchTerm, " ?p ?o .
+  
+}")
+
+let $results := spq:query('http://dbpedia.org/sparql', 'http://dbpedia.org', (),$query, $spq:SPARQL_RESULTS_XML)
+
+let $numRes := fn:count($results//sparql:result)
+
+return ($results//sparql:result, $numRes)
+
+
+
+};
+
+let $res := pocappLib:getInfo('The_Princess_Bride')
+return $res
+
+</query><query name="getUris" focus="false" active="true" content-source="as:9446926577974576079:" mode="javascript">// query
+var uriItr = cts.uriMatch("*Tweet*");
+uriItr;
+</query><query name="viewDoc" focus="false" active="true" content-source="as:9446926577974576079:" mode="javascript">// query
+//fn.doc("Movie__Info-8-2015-08-27-08-770680853.json") // Ant-Man
+//fn.doc("Movie__Info-8-2015-09-01-12-770680853.json")
+
+//fn.doc("Movie__Info-5-2015-08-27-08-771258835.json") //Man from UNCLE
+//fn.doc("Movie__Info-2-2015-08-27-08-771357161.json") //Mission Impossible
+//fn.doc("Movie__Info-7-2015-08-27-08-771415974.json") //The Gift
+//fn.doc("Movie__Info-3-2015-08-27-08-771379327.json") //Sinister
+//fn.doc("Movie__Info-1-2015-08-27-08-771305050.json") //Straight Outta Compton
+//fn.doc("Actor__Info-770875086-770680853.json") //Corey Stoll
+//fn.doc("Actor__Info-771083890-771258835.json") //Alicia Vikander
+//fn.doc("Actor__Info-162654580-770680853.json") //Judy Greer
+//fn.doc("Actor__Info-162654580-771324839.json") //Judy Greer no TMD triples
+//fn.doc("movie-reviews-771321013.json")
+//fn.doc("tweet-actor-162652156-2015-03-12-21-0.json")
+//fn.doc("tweet-movie-771386174-2015-03-12-21-8.json")
+//fn.doc("movie-reviews-771311953.json")
+//fn.doc("actors-162652185-771364722.json")
+//fn.doc("adHocTriple-2015-04-27-09-04.json")
+fn.doc("straight%20outta%20compton-fun.xml")
+</query><query name="DeleteTriples" focus="false" active="true" content-source="as:12312185648792136379:" mode="xquery">xquery version "1.0-ml";
+import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy";
+
+let $triples := cts:triples(sem:iri("http://www.dbpedia.org/ontology/Film"),(),())
+for $triple in $triples
+return(sem:database-nodes($triple) ! xdmp:node-delete(.));
+
+import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy";
+let $triples2 := cts:triples((),(),sem:iri("http://www.dbpedia.org/ontology/Film"))
+for $triple in $triples2
+return(sem:database-nodes($triple) ! xdmp:node-delete(.));
+
+import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy";
+let $triples3 := cts:triples((),(),())
+for $triple in $triples3
+return(sem:database-nodes($triple) ! xdmp:node-delete(.))</query><query name="movieDB" focus="true" active="true" content-source="as:12312185648792136379:" mode="javascript">function getTmdbActorInfo(actorName) {
+
+actorName = xdmp.urlEncode(actorName);
+var apikey = "169f143a4bf429e2b105a8da52f93f61";
+var res = xdmp.httpGet("https://api.themoviedb.org/3/search/person?query=" + actorName + "&amp;api_key="+apikey);
+var page = res.next();
+page = res.next();
+var id = page.value.toObject().results[0].id;
+var res2 = xdmp.httpGet("https://api.themoviedb.org/3/person/"+id+"?api_key="+apikey);
+var actor = res2.next();
+actor = res2.next().value.toObject();
+return actor;
+}
+
+getTmdbActorInfo("Hugh Jackman");</query><query name="LoadActorOntology" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql-update">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+PREFIX prov:	&lt;http://www.w3.org/ns/prov#&gt;
+PREFIX ns8:	&lt;http://mappings.dbpedia.org/index.php/OntologyClass:&gt;
+PREFIX owl:	&lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX wdrs:	&lt;http://www.w3.org/2007/05/powder-s#&gt;
+PREFIX ns2:	&lt;http://open.vocab.org/terms/&gt;
+PREFIX ns5:	&lt;http://dbpedia.org/ontology/Wikidata:&gt;
+PREFIX ns6:	&lt;http://schema.org/&gt;
+PREFIX wdrs:	&lt;http://www.w3.org/2007/05/powder-s#&gt;
+PREFIX ns0:	&lt;http://open.vocab.org/terms/&gt;
+
+
+## insert some ontology data into http://marklogic.com/semantics/mm/movies-1
+INSERT DATA 
+{ 
+ 
+&lt;http://dbpedia.org/ontology/&gt;	ns0:defines	dbpedia-owl:Actor .
+dbpedia-owl:starring	rdfs:range	dbpedia-owl:Actor .
+dbpedia-owl:arielAward	rdfs:domain	dbpedia-owl:Actor .
+dbpedia-owl:geminiAward	rdfs:domain	dbpedia-owl:Actor .
+dbpedia-owl:goldenCalfAward	rdfs:domain	dbpedia-owl:Actor .
+dbpedia-owl:goldenRaspberryAward	rdfs:domain	dbpedia-owl:Actor .
+dbpedia-owl:iftaAward	rdfs:domain	dbpedia-owl:Actor .
+dbpedia-owl:laurenceOlivierAward	rdfs:domain	dbpedia-owl:Actor .
+dbpedia-owl:naacpImageAward	rdfs:domain	dbpedia-owl:Actor .
+dbpedia-owl:nationalFilmAward	rdfs:domain	dbpedia-owl:Actor .
+dbpedia-owl:screenActorsGuildAward	rdfs:domain	dbpedia-owl:Actor .
+&lt;http://dbpedia.org/ontology/data/definitions.xml&gt;	ns0:describes	dbpedia-owl:Actor .
+&lt;http://dbpedia.org/ontology/data/definitions.ttl&gt;	ns0:describes	dbpedia-owl:Actor .
+&lt;http://dbpedia.org/ontology/data/definitions.jsonld&gt;	ns0:describes	dbpedia-owl:Actor .
+dbpedia-owl:AdultActor	rdfs:subClassOf	dbpedia-owl:Actor .
+
+dbpedia-owl:Actor	rdf:type	owl:Class ;
+	owl:sameAs	dbpedia-owl:Actor ;
+	rdfs:subClassOf	dbpedia-owl:Artist ;
+	rdfs:label	"\uC601\uD654\uC778"@ko ,
+		"Schauspieler" ,
+		"acteur" ,
+		"\u6F14\u54E1"@zh ,
+		"aktor"@pl ,
+		"actor"@en ,
+		"\u4FF3\u512A"@ja ,
+		"actor"@es ,
+		"ator"@pt ,
+		"acteur"@nl ,
+		"\u03B7\u03B8\u03BF\u03C0\u03BF\u03B9\u03CC\u03C2"@el ,
+		"attore"@it ,
+		"aktore" .
+
+dbpedia-owl:Actor	prov:wasDerivedFrom	ns6:Actor ;
+	rdfs:comment	"Un attore o un attrice \u00E8 una persona che recita in una produzione teatrale, televisiva, cinematografica o radiofonica."@it ,
+		"An actor or actress is a person who acts in a dramatic production and who works in film, television, theatre, or radio in that capacity."@en ,
+		"\u039C\u03B9\u03B1 \u03B7\u03B8\u03BF\u03C0\u03BF\u03B9\u03CC\u03C2 \u03AE \u03AD\u03BD\u03B1\u03C2 \u03B7\u03B8\u03BF\u03C0\u03BF\u03B9\u03CC\u03C2 \u03B5\u03AF\u03BD\u03B1\u03B9 \u03AD\u03BD\u03B1 \u03AC\u03C4\u03BF\u03BC\u03BF \u03C0\u03BF\u03C5 \u03C0\u03B1\u03AF\u03B6\u03B5\u03B9 \u03C3\u03B5 \u03BC\u03B9\u03B1 \u03B4\u03C1\u03B1\u03BC\u03B1\u03C4\u03B9\u03BA\u03AE \u03C0\u03B1\u03C1\u03B1\u03B3\u03C9\u03B3\u03AE \u03BA\u03B1\u03B9 \u03C0\u03BF\u03C5 \u03B5\u03C1\u03B3\u03AC\u03B6\u03B5\u03C4\u03B1\u03B9 \u03C3\u03C4\u03BF \u03C7\u03CE\u03C1\u03BF \u03C4\u03BF\u03C5 \u03BA\u03B9\u03BD\u03B7\u03BC\u03B1\u03C4\u03BF\u03B3\u03C1\u03AC\u03C6\u03BF\u03C5, \u03C4\u03B7\u03C2 \u03C4\u03B7\u03BB\u03B5\u03CC\u03C1\u03B1\u03C3\u03B7\u03C2, \u03C4\u03BF\u03C5 \u03B8\u03B5\u03AC\u03C4\u03C1\u03BF\u03C5, \u03AE \u03C4\u03BF \u03C1\u03B1\u03B4\u03B9\u03CC\u03C6\u03C9\u03BD\u03BF."@el ;
+	rdfs:isDefinedBy	dbpedia-owl: .
+
+dbpedia-owl:Actor	wdrs:describedby	&lt;http://dbpedia.org/ontology/data/definitions.ttl&gt; ,
+		&lt;http://dbpedia.org/ontology/data/definitions.jsonld&gt; ,
+		&lt;http://dbpedia.org/ontology/data/definitions.xml&gt; .
+dbpedia-owl:VoiceActor	rdfs:subClassOf	dbpedia-owl:Actor .
+  
+}</query><query name="InferOnMovies" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: This SPARQL query can search for movie triples that are FILMs, i.e. dbpedia-owl:Film
+## It will find them because movie subjects of type Film have been explicitly created
+## It can also find these movies of the object on line 13 is changed to db-owl:Work
+## because the Film ontology has been loaded, which states that Film is a subclass of Work 
+:)
+let $rdfs-store := sem:ruleset-store("rdfs.rules",sem:store() )
+
+return
+  (: use the store you just created - pass it into sem:sparql() :)
+  sem:sparql('
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+
+SELECT ?label ?movie
+WHERE 
+  { 
+    ?movie  rdf:type  dbpedia-owl:Work ;
+    rdfs:label ?label .
+    
+  }
+  ',
+  (),
+  (),
+  $rdfs-store
+  )</query><query name="LoadFilmOntology" focus="false" active="true" content-source="as:7237428643377309591:" mode="sparql-update">PREFIX rdfs:	&lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+PREFIX prov:	&lt;http://www.w3.org/ns/prov#&gt;
+PREFIX ns7:	&lt;http://mappings.dbpedia.org/index.php/OntologyClass:&gt;
+PREFIX ns2:	&lt;http://open.vocab.org/terms/&gt;
+PREFIX rdf:	&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX owl:	&lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX dul:	&lt;http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#&gt;
+PREFIX wdrs:	&lt;http://www.w3.org/2007/05/powder-s#&gt;
+
+PREFIX ns5:	&lt;http://dbpedia.org/ontology/Wikidata:&gt;
+PREFIX ns6:	&lt;http://schema.org/&gt;
+PREFIX ns8:	&lt;http://mappings.dbpedia.org/index.php/OntologyClass:&gt;
+
+
+## insert some ontology data into http://marklogic.com/semantics/mm/actors-1
+INSERT DATA 
+{ 
+
+dbpedia-owl:gross	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:cinematography	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:editing	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:movie	rdfs:range	dbpedia-owl:Film .
+dbpedia-owl:costumeDesigner	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:makeupArtist	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:setDesigner	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:specialEffects	rdfs:domain	dbpedia-owl:Film .
+
+dbpedia-owl:	ns2:defines	dbpedia-owl:Film .
+dbpedia-owl:narrator	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:afdbId	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:allcinemaId	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:amgid	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:bgafdId	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:eTeatrId	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:egafdId	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:eurobabeIndexId	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:filmAudioType	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:filmColourType	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:filmPolskiId	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:filmRuntime	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:firstBroadcast	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:iafdId	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:imdbId	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:producedBy	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:quebecerTitle	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:titleLanguage	rdfs:domain	dbpedia-owl:Film .
+dbpedia-owl:closingFilm	rdfs:range	dbpedia-owl:Film .
+dbpedia-owl:openingFilm	rdfs:range	dbpedia-owl:Film .
+dbpedia-owl:film	rdfs:range	dbpedia-owl:Film .
+dbpedia-owl:filmVersion	rdfs:range	dbpedia-owl:Film .
+dbpedia-owl:director	rdfs:domain	dbpedia-owl:Film .
+&lt;http://dbpedia.org/ontology/data/definitions.xml&gt;	ns2:describes	dbpedia-owl:Film .
+&lt;http://dbpedia.org/ontology/data/definitions.ttl&gt;	ns2:describes	dbpedia-owl:Film .
+&lt;http://dbpedia.org/ontology/data/definitions.jsonld&gt;	ns2:describes	dbpedia-owl:Film .
+
+dbpedia-owl:Film	rdf:type	owl:Class .
+
+dbpedia-owl:Film	owl:equivalentClass	ns5:Q11424 .
+
+dbpedia-owl:Film	owl:equivalentClass	ns6:Movie ;
+	owl:sameAs	dbpedia-owl:Film ;
+	rdfs:subClassOf	dbpedia-owl:Work ;
+	rdfs:label	"film"@fr ,
+		"\u0641\u064A\u0644\u0645"@ar ,
+		"Film"@de ,
+		"movie"@en ,
+		"\uC601\uD654"@ko ,
+		"\u6620\u753B"@ja ,
+		"film"@pl ,
+		"scann\u00E1n"@ga ,
+		"film"@nl ,
+		"\u03C4\u03B1\u03B9\u03BD\u03AF\u03B1"@el .
+
+dbpedia-owl:Film	prov:wasDerivedFrom	ns8:Film ;
+	rdfs:isDefinedBy	dbpedia-owl: .
+dbpedia-owl:Film	wdrs:describedby	&lt;http://dbpedia.org/ontology/data/definitions.ttl&gt; ,
+		&lt;http://dbpedia.org/ontology/data/definitions.jsonld&gt; ,
+		&lt;http://dbpedia.org/ontology/data/definitions.xml&gt; .
+    
+   
+}</query><query name="InferOnActors" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: 
+## This SPARQL query can search for actor triples that are agents, i.e. dbpedia-owl:Agent
+## It will find them because actor subjects of type agent have been explicitly created
+## It can also find these actors if the object on line 14 is changed to db-owl:Thing,Person
+## Family, Organisation, Deity, because agent is a subclass of these
+## because the agent ontology has been loaded, which states that agent is a subclass of Person 
+:)
+let $rdfs-store := sem:ruleset-store("rdfs.rules",sem:store() )
+
+return
+  (: use the store you just created - pass it into sem:sparql() :)
+  sem:sparql('
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+
+SELECT ?actor
+WHERE 
+  { 
+    ?actor  rdf:type  dbpedia-owl:Deity;
+   
+  }
+  ',
+  (),
+  (),
+  $rdfs-store
+  )</query><query name="AdHocInsertTriples" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql-update">## insert some triples into &lt;http://marklogic.com/semantics/sb/products/inf-1&gt;
+## Tommy Cool is an agent
+## Jony Jett is an agent
+PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX actor: &lt;http://dbpedia.org/ontology/Actor&gt;
+PREFIX agent: &lt;http://dbpedia.org/ontology/Agent&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+
+INSERT DATA 
+{ 
+  
+    &lt;http://dbpedia.org/resource/Tommy_Cool&gt; rdf:type dbpedia-owl:Agent .
+  
+}
+</query><query name="DocumentDelete" focus="false" active="true" content-source="14907809695893881995:0:Apps" mode="javascript">declareUpdate();
+xdmp.documentDelete("/rules/incentives.rules");</query><query name="ctsTripleFindSubjectObject" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: examples :)
+(: cts:triples(sem:iri("http://dbpedia.org/resource/Tommy_Cool")) :)
+xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+cts:triples(sem:iri("http://dbpedia.org/resource/James_Bond"))</query><query name="LoadAgentOntology" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql-update">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+PREFIX prov:	&lt;http://www.w3.org/ns/prov#&gt;
+PREFIX ns8:	&lt;http://mappings.dbpedia.org/index.php/OntologyClass:&gt;
+PREFIX owl:	&lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX wdrs:	&lt;http://www.w3.org/2007/05/powder-s#&gt;
+PREFIX ns2:	&lt;http://open.vocab.org/terms/&gt;
+PREFIX ns5:	&lt;http://dbpedia.org/ontology/Wikidata:&gt;
+PREFIX ns6:	&lt;http://schema.org/&gt;
+PREFIX wdrs:	&lt;http://www.w3.org/2007/05/powder-s#&gt;
+PREFIX ns0:	&lt;http://open.vocab.org/terms/&gt;
+PREFIX dul:	&lt;http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#&gt;
+PREFIX ns7:	&lt;http://mappings.dbpedia.org/index.php/OntologyClass:&gt;
+PREFIX wdrs:	&lt;http://www.w3.org/2007/05/powder-s#&gt;
+PREFIX wb:	&lt;http://wb.com/props#&gt;
+
+
+## insert some ontology data into http://marklogic.com/semantics/mm/movies-1
+INSERT DATA 
+{ 
+
+wb:hasRightsTo	rdfs:subPropertyOf	wb:owedRevenueFrom .
+wb:wrote	rdfs:subPropertyOf	wb:hasRightsTo .
+wb:coWrote	rdfs:subPropertyOf	wb:wrote .
+wb:fightingIn rdfs:subPropertyOf wb:actingCool .
+wb:romancingIn rdfs:subPropertyOf wb:actingCool .
+wb:drivingIn rdfs:subPropertyOf wb:actingCool .
+wb:golfingIn rdfs:subPropertyOf wb:inLeisureSport .
+wb:fishingIn rdfs:subPropertyOf wb:inLeisureSport .
+wb:swimmingIn rdfs:subPropertyOf wb:inLeisureSport .
+wb:runningIn rdfs:subPropertyOf wb:inLeisureSport .
+wb:hasLogo  rdfs:subPropertyOf wb:possibleBrandRevenue .
+wb:actingCool rdfs:subPropertyOf wb:lifeStyleRevenue .
+wb:inLeisureSport rdfs:subPropertyOf wb:lifeStyleRevenue .
+dbpedia-owl:nlaId	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:Agent rdfs:subClassOf dbpedia-owl:Family		 .
+dbpedia-owl:age	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:generalCouncil	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:juniorSeason	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:managerSeason	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:nationalSelection	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:playerSeason	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:firstOwner	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:ideology	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:viafId	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:discipline	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:artist	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:season	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:	ns2:defines	dbpedia-owl:Agent .
+dbpedia-owl:editor	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:artPatron	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:regionalCouncil	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:Agent	rdf:type	owl:Class .
+dbpedia-owl:Agent	owl:equivalentClass	dul:Agent ;
+	owl:sameAs	dbpedia-owl:Agent ;
+	rdfs:subClassOf	owl:Thing ;
+	rdfs:label	"\u30A8\u30FC\u30B8\u30A7\u30F3\u30C8"@ja ,
+		"agente"@it ,
+		"agent"@nl ,
+		"agente"@es ,
+		"agent"@fr ,
+		"agent"@en ,
+		"Agent"@de ,
+		"\u03C0\u03C1\u03AC\u03BA\u03C4\u03BF\u03C1\u03B1\u03C2" .
+dbpedia-owl:Agent	prov:wasDerivedFrom	ns7:Agent ;
+	rdfs:comment	"Analogous to a foaf:Agent, an agent is an entity that acts. This is intended to be the super class of Person and Organisation."@en ,
+		"\u0391\u03BD\u03AC\u03BB\u03BF\u03B3\u03B1 \u03BC\u03B5 \u03C4\u03B7\u03BD \u03BA\u03BB\u03AC\u03C3\u03B7 foaf:Agent, \u03AD\u03BD\u03B1\u03C2 \u03C0\u03C1\u03AC\u03BA\u03C4\u03BF\u03C1\u03B1\u03C2 \u03B5\u03AF\u03BD\u03B1\u03B9 \u03BC\u03B9\u03B1 \u03BF\u03BD\u03C4\u03CC\u03C4\u03B7\u03C4\u03B1 \u03C0\u03BF\u03C5 \u03B5\u03BD\u03B5\u03C1\u03B3\u03B5\u03AF. \u0391\u03C5\u03C4\u03CC \u03C0\u03C1\u03BF\u03BF\u03C1\u03AF\u03B6\u03B5\u03C4\u03B1\u03B9 \u03BD\u03B1 \u03B5\u03AF\u03BD\u03B1\u03B9 \u03BC\u03B9\u03B1 \u03C5\u03C0\u03B5\u03C1\u03BA\u03BB\u03AC\u03C3\u03B7 \u03C4\u03B7\u03C2 \u03BA\u03BB\u03AC\u03C3\u03B7\u03C2 \u0386\u03C4\u03CC\u03BC\u03BF \u03BA\u03B1\u03B9 \u039F\u03C1\u03B3\u03B1\u03BD\u03B9\u03C3\u03BC\u03CC\u03C2." ;
+	owl:disjointWith	dbpedia-owl:Place ;
+	rdfs:isDefinedBy	dbpedia-owl: .
+dbpedia-owl:Agent	wdrs:describedby	&lt;http://dbpedia.org/ontology/data/definitions.ttl&gt; ,
+		&lt;http://dbpedia.org/ontology/data/definitions.jsonld&gt; ,
+		&lt;http://dbpedia.org/ontology/data/definitions.xml&gt; .
+dbpedia-owl:Agent	rdfs:subClassOf	 dbpedia-owl:Person.
+dbpedia-owl:hometown	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:developer	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:currentWorldChampion	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:Agent rdfs:subClassOf dbpedia-owl:Organisation		 .
+dbpedia-owl:animator	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:owner	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:producer	rdfs:range	dbpedia-owl:Agent .
+&lt;http://dbpedia.org/ontology/data/definitions.xml&gt;	ns2:describes	dbpedia-owl:Agent .
+&lt;http://dbpedia.org/ontology/data/definitions.ttl&gt;	ns2:describes	dbpedia-owl:Agent .
+&lt;http://dbpedia.org/ontology/data/definitions.jsonld&gt;	ns2:describes	dbpedia-owl:Agent .
+dbpedia-owl:foundedBy	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:honours	rdfs:domain	dbpedia-owl:Agent .
+}</query><query name="CheckOntologyLoad" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: 
+## This SPARQL query can search for actor triples that are agents, i.e. dbpedia-owl:Agent
+## It will find them because actor subjects of type agent have been explicitly created
+## It can also find these actors if the object on line 14 is changed to db-owl:Thing,Person
+## Family, Organisation, Deity, because agent is a subclass of these
+## because the agent ontology has been loaded, which states that agent is a subclass of Person 
+:)
+let $rdfs-store := sem:ruleset-store("rdfs.rules",sem:store() )
+
+return
+  (: use the store you just created - pass it into sem:sparql() :)
+  sem:sparql('
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+
+SELECT  ?s ?p ?o 
+WHERE 
+  { 
+     ?s  ?p ?o.
+ 
+  }
+  ',
+  (),
+  (),
+  $rdfs-store
+  )</query><query name="CheckDomains" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: 
+## This SPARQL query can search for actor triples that are agents, i.e. dbpedia-owl:Agent
+## It will find them because actor subjects of type agent have been explicitly created
+## It can also find these actors if the object on line 14 is changed to db-owl:Thing,Person
+## Family, Organisation, Deity, because agent is a subclass of these
+## because the agent ontology has been loaded, which states that agent is a subclass of Person 
+:)
+let $rdfs-store := sem:ruleset-store("rdfs.rules",sem:store() )
+
+return
+  (: use the store you just created - pass it into sem:sparql() :)
+  sem:sparql('
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+
+SELECT ?o ?o2
+WHERE 
+  { 
+       &lt;http://dbpedia.org/resource/Tommy_Cool&gt; a ?o .
+       ?o2 rdfs:domain ?o .
+      
+ 
+  }
+  ',
+  (),
+  (),
+  $rdfs-store
+  )</query><query name="InferAgent" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: 
+## This SPARQL query can search for actor triples that are agents, i.e. dbpedia-owl:Agent
+## It will find them because actor subjects of type agent have been explicitly created
+## It can also find these actors if the object on line 14 is changed to db-owl:Thing,Person
+## Family, Organisation, Deity, because agent is a subclass of these
+## because the agent ontology has been loaded, which states that agent is a subclass of Person 
+:)
+let $rdfs-store := sem:ruleset-store("rdfs.rules",sem:store() )
+
+return
+  (: use the store you just created - pass it into sem:sparql() :)
+  sem:sparql('
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+
+SELECT ?p ?o
+WHERE 
+  { 
+       &lt;http://dbpedia.org/resource/Tom_Cruise&gt; ?p ?o .
+ 
+  }
+  ',
+  (),
+  (),
+  $rdfs-store
+  )</query><query name="InferBackwardBackWard" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: 
+## This SPARQL query can search for actor triples that are agents, i.e. dbpedia-owl:Agent
+## It will find them because actor subjects of type agent have been explicitly created
+## It can also find these actors if the object on line 14 is changed to db-owl:Thing,Person
+## Family, Organisation, Deity, because agent is a subclass of these
+## because the agent ontology has been loaded, which states that agent is a subclass of Person 
+:)
+let $rdfs-store := sem:ruleset-store("rdfs.rules",sem:store() )
+
+return
+  (: use the store you just created - pass it into sem:sparql() :)
+  sem:sparql('
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+
+SELECT ?s
+WHERE 
+  { 
+       ?s &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://dbpedia.org/ontology/Deity&gt; .
+       
+ 
+  }
+  ',
+  (),
+  (),
+  $rdfs-store
+  )</query><query name="AppearedWith" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: 
+## This SPARQL query can search for actor triples that are agents, i.e. dbpedia-owl:Agent
+## It will find them because actor subjects of type agent have been explicitly created
+## It can also find these actors if the object on line 14 is changed to db-owl:Thing,Person
+## Family, Organisation, Deity, because agent is a subclass of these
+## because the agent ontology has been loaded, which states that agent is a subclass of Person 
+:)
+let $rdfs-store := sem:ruleset-store("rdfs.rules",sem:store() )
+
+return
+  (: use the store you just created - pass it into sem:sparql() :)
+  sem:sparql('
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+
+SELECT ?s ?o
+WHERE 
+  { 
+       ?s &lt;appearedWith&gt; ?o
+ 
+  }
+  ',
+  (),
+  (),
+  $rdfs-store
+  )</query><query name="CoOccurrence" focus="false" active="true" content-source="as:9446926577974576079:" mode="javascript">
+cts.elementValueCoOccurrences(xs.QName("actorName"), xs.QName("tweet"));</query><query name="CheckOntologyLoad2" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: 
+## This SPARQL query can search for actor triples that are agents, i.e. dbpedia-owl:Agent
+## It will find them because actor subjects of type agent have been explicitly created
+## It can also find these actors if the object on line 14 is changed to db-owl:Thing,Person
+## Family, Organisation, Deity, because agent is a subclass of these
+## because the agent ontology has been loaded, which states that agent is a subclass of Person 
+:)
+let $rdfs-store := sem:ruleset-store("rdfs.rules",sem:store() )
+
+return
+  (: use the store you just created - pass it into sem:sparql() :)
+  sem:sparql('
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+
+SELECT *
+WHERE 
+  { 
+    ?s ?p ?o.
+ 
+  }
+  ',
+  (),
+  (),
+  $rdfs-store
+  )</query><query name="OwedRevenue" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: 
+## This SPARQL query can search for actor triples that are agents, i.e. dbpedia-owl:Agent
+## It will find them because actor subjects of type agent have been explicitly created
+## It can also find these actors if the object on line 14 is changed to db-owl:Thing,Person
+## Family, Organisation, Deity, because agent is a subclass of these
+## because the agent ontology has been loaded, which states that agent is a subclass of Person 
+:)
+let $rdfs-store := sem:ruleset-store("rdfs.rules",sem:store() )
+
+return
+  (: use the store you just created - pass it into sem:sparql() :)
+  sem:sparql('
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX wb:	&lt;http://wb.com/props#&gt;
+
+SELECT *
+WHERE 
+  { 
+    ?s wb:owedRevenueFrom ?o .
+    
+  }
+  ',
+  (),
+  (),
+  $rdfs-store
+  )</query><query name="Disney1" focus="false" active="true" content-source="as:14902094910169400014:" mode="javascript">//Uses Document DB
+// query
+cts.uriMatch("*triple*");</query><query name="Disney2" focus="false" active="true" content-source="as:14902094910169400014:" mode="xquery">
+xquery version "1.0-ml"; 
+ 
+import module namespace sem = "http://marklogic.com/semantics" at "/MarkLogic/semantics.xqy";
+	  
+sem:rdf-load('/tmp/princess.ttl', "turtle")</query><query name="ctsTriples" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: uses disneytest DB :)
+xquery version "1.0-ml"; 
+ 
+import module namespace sem = "http://marklogic.com/semantics" 
+      at "/MarkLogic/semantics.xqy";
+
+sem:rdf-serialize(cts:triples(), "turtle") </query><query name="Disney3" focus="false" active="true" content-source="as:14902094910169400014:" mode="sparql">
+
+Select * where {
+   ?s ?p ?o
+           }</query><query name="Query 4" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql">## query
+select (?s as ?b)
+where
+{
+   ?s ?p ?o
+           }
+</query><query name="queryMeters" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+xdmp:query-meters();</query><query name="cts:search" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+let $word := ("San", "Andreas")
+
+let $result := cts:search(//quote,
+    cts:or-query(for $x in $word
+return cts:word-query($x))
+)
+return $result
+</query><query name="ElementWordQuery" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+
+let $element := ("actorName", "actorNickName")
+let $searchString := ("Rock", "Cloony")
+
+let $results := cts:search( fn:doc(),cts:element-word-query(xs:QName($element), $searchString))
+
+return $results
+</query><query name="DocInsert" focus="false" active="true" content-source="as:15671436072615402572:" mode="xquery">xdmp:document-insert(
+       "/actor2.xml",
+       &lt;actor&gt;&lt;actorName&gt;Dwayne Johnson&lt;/actorName&gt;&lt;actorNickName&gt;The Rock&lt;/actorNickName&gt;&lt;movie&gt;San Andreas&lt;/movie&gt;&lt;/actor&gt;,
+       xdmp:default-permissions(),
+       "mmtest")
+</query><query name="CollectionDelete" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+xdmp:collection-delete("mmtest");</query><query name="XSL-Example" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">
+xquery version "1.0-ml";
+
+let $doc :=
+&lt;advancedSettings&gt;
+&lt;value&gt;&amp;lt;settings&amp;gt;&amp;lt;setting name="asv.preview.maxRows"&amp;gt;450&amp;lt;/setting&amp;gt;&amp;lt;/settings&amp;gt;&lt;/value&gt;
+&lt;/advancedSettings&gt;
+
+let $convert := xdmp:unquote(xdmp:url-decode($doc/value/text()))
+
+return
+  $convert//setting</query><query name="xdmpNodeReplace" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+let $doc := fn:doc("/xmlFile.xml")
+let $oldNode := $doc/catalog/product/name[@language="en"]
+let $newNode := element {fn:local-name($oldNode)} { attribute language {"chinese"}, $oldNode/text()}
+
+return xdmp:node-replace($oldNode,$newNode)</query><query name="elementExample" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+let $x := element { "example" } {
+  attribute simple { "true" },
+  element { "pointless" } { }
+}
+return $x</query><query name="GetATweet" focus="false" active="true" content-source="as:9446926577974576079:" mode="javascript">function getTweets () {
+  
+  var query = xdmp.urlEncode("Trump");
+  
+  var myuri = fn.concat("https://api.twitter.com/1.1/search/tweets.json?q=",query);
+ 
+   
+  var tweetItr = xdmp.httpGet(myuri, 
+                              { "headers" : {
+                                "Authorization" : "Bearer AAAAAAAAAAAAAAAAAAAAACYkeQAAAAAAr%2F1pR0BhZF4yexQfADbDHbOHwdM%3DscxWJTjQ85vF1lj9AK7LXMLXLsmyOXDmV58kRLzOcJ68XCSUTZ"
+                                },
+                               "format" : "json"
+                              });
+var tweetPackage = tweetItr.next();
+tweetPackage = tweetItr.next().value.toObject();
+
+return tweetPackage.statuses[10].text;
+}
+
+getTweets();</query><query name="loadCustomRules1" focus="false" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
+xdmp:document-insert(
+'/rules/incentives.rules',
+text{
+'
+# Incentive rules for inference
+
+PREFIX si:	&lt;http://si.gov/si:&gt;
+PREFIX cat: &lt;http://dbpedia.org/resource/Category:&gt;
+
+rule "has tax incentives" CONSTRUCT {
+?f si:hasTaxIncentives "California Tax Incentives"
+} {
+?f &lt;http://purl.org/dc/terms/subject&gt; &lt;http://dbpedia.org/resource/Category:Films_set_in_San_Francisco,_California&gt; .
+&lt;http://dbpedia.org/resource/Category:Films_set_in_San_Francisco,_California&gt; si:hasTaxIncentives "California Tax Incentives"
+
+}
+'
+}
+)
+</query><query name="queryDBPedia" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql">## query
+
+PREFIX si:	&lt;http://si.gov/si:&gt;
+PREFIX cat: &lt;http://dbpedia.org/resource/Category:&gt;
+
+select ?s
+where
+{
+   ?s &lt;http://purl.org/dc/terms/subject&gt; &lt;http://dbpedia.org/resource/Category:Films_set_in_San_Francisco,_California&gt;
+}</query><query name="documentDeleteFromSchema" focus="false" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
+(:xdmp:document-delete("/rules/incentives.rules") :)
+xdmp:document-delete("/rules/incentives.rules")</query><query name="checkForIncentives" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">(: 
+## This SPARQL query 
+:)
+
+let $rdfs-store := sem:ruleset-store("/rules/incentives.rules",sem:store() )
+
+return
+  (: use the store you just created - pass it into sem:sparql() :)
+  sem:sparql('
+PREFIX si:	&lt;http://si.gov/si:&gt;
+PREFIX cat: &lt;http://dbpedia.org/resource/Category:&gt;
+
+select ?s ?o 
+where
+{ 
+  ?s si:hasTaxIncentives ?o .
+  
+     
+}
+  ',
+  (),
+  (),
+  $rdfs-store
+  )
+
+
+
+</query><query name="insertIncentive" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql-update">## insert some ontology data into http://marklogic.com/semantics/mm/movies-1
+
+INSERT DATA 
+{ 
+&lt;http://dbpedia.org/resource/Category:Films_set_in_San_Francisco,_California&gt; &lt;http://si.gov/si:hasTaxIncentives&gt; "San Francisco Tax Incentives" .
+&lt;http://dbpedia.org/resource/Category:Films_shot_in_Los_Angeles,_California&gt; &lt;http://si.gov/si:hasTaxIncentives&gt; "Los Angeles Tax Incentives" .
+&lt;http://dbpedia.org/ontology/shotInNewYork&gt; &lt;http://si.gov/si:hasTaxIncentives&gt; "New York Tax Incentives"
+}</query><query name="loadCustomRules2" focus="false" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
+xdmp:document-insert(
+'/rules/incentives.rules',
+text{
+'
+# Incentive rules for inference
+
+PREFIX si:	&lt;http://si.gov/si:&gt;
+PREFIX cat: &lt;http://dbpedia.org/resource/Category:&gt;
+PREFIX wb:	&lt;http://wb.com/props#&gt;
+
+rule "has San Francisco tax incentives" CONSTRUCT {
+?f si:hasTaxIncentives "San Francisco Tax Incentives"
+} {
+?f &lt;http://purl.org/dc/terms/subject&gt; &lt;http://dbpedia.org/resource/Category:Films_set_in_San_Francisco,_California&gt; .
+&lt;http://dbpedia.org/resource/Category:Films_set_in_San_Francisco,_California&gt; si:hasTaxIncentives "San Francisco Tax Incentives"
+
+} 
+
+rule "has Los Angeles tax incentives" CONSTRUCT {
+?f si:hasTaxIncentives "Los Angeles Tax Incentives"
+} {
+?f &lt;http://purl.org/dc/terms/subject&gt; &lt;http://dbpedia.org/resource/Category:Films_shot_in_Los_Angeles,_California&gt; .
+&lt;http://dbpedia.org/resource/Category:Films_shot_in_Los_Angeles,_California&gt; si:hasTaxIncentives "Los Angeles Tax Incentives"
+
+} 
+rule "has New York tax incentives" CONSTRUCT {
+?f si:hasTaxIncentives "New York Tax Incentives"
+} {
+?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/shotInNewYork&gt; .
+&lt;http://dbpedia.org/ontology/shotInNewYork&gt; si:hasTaxIncentives "New York Tax Incentives"
+
+}
+
+'
+}
+)
+</query><query name="InsertJSONDoc" focus="false" active="true" content-source="as:9446926577974576079:" mode="javascript">declareUpdate();
+xdmp.documentInsert("/docs/movie.json",
+{
+  "id": "770680853",
+  "title": "Ant-Man",
+  "year": 2015,
+  "mpaa_rating": "PG-13",
+  "runtime": 115,
+  "critics_consensus": "",
+  "release_dates": {
+    "theater": "2015-07-17"
+  },
+  "ratings": {
+    "critics_rating": "Certified Fresh",
+    "critics_score": 79,
+    "audience_rating": "Upright",
+    "audience_score": 90
+  },
+  "synopsis": "The next evolution of the Marvel Cinematic Universe brings a founding member of The Avengers to the big screen for the first time with Marvel Studios' \"Ant-Man.\" Armed with the astonishing ability to shrink in scale but increase in strength, master thief Scott Lang must embrace his inner-hero and help his mentor, Dr. Hank Pym, protect the secret behind his spectacular Ant-Man suit from a new generation of towering threats. Against seemingly insurmountable obstacles, Pym and Lang must plan and pull off a heist that will save the world. -- (C) Marvel",
+  "posters": {
+    "thumbnail": "http:\/\/resizing.flixster.com\/_bifC--YxXyDN9XjqQ_yi176WAY=\/54x80\/dkpu1ddg7pbsk.cloudfront.net\/movie\/11\/19\/12\/11191270_ori.png",
+    "profile": "http:\/\/resizing.flixster.com\/_bifC--YxXyDN9XjqQ_yi176WAY=\/54x80\/dkpu1ddg7pbsk.cloudfront.net\/movie\/11\/19\/12\/11191270_ori.png",
+    "detailed": "http:\/\/resizing.flixster.com\/_bifC--YxXyDN9XjqQ_yi176WAY=\/54x80\/dkpu1ddg7pbsk.cloudfront.net\/movie\/11\/19\/12\/11191270_ori.png",
+    "original": "http:\/\/resizing.flixster.com\/_bifC--YxXyDN9XjqQ_yi176WAY=\/54x80\/dkpu1ddg7pbsk.cloudfront.net\/movie\/11\/19\/12\/11191270_ori.png"
+  },
+  "abridged_cast": [
+    {
+      "name": "Paul Rudd",
+      "id": "162653309",
+      "characters": [
+        "Scott Lang\/Ant-Man"
+      ]
+    },
+    {
+      "name": "Michael Douglas",
+      "id": "162660400",
+      "characters": [
+        "Dr. Hank Pym"
+      ]
+    },
+    {
+      "name": "Evangeline Lilly",
+      "id": "512423472",
+      "characters": [
+        "Hope Van Dyne"
+      ]
+    },
+    {
+      "name": "Corey Stoll",
+      "id": "770875086",
+      "characters": [
+        "Darren Cross\/Yellowjacket"
+      ]
+    },
+    {
+      "name": "Michael Pena",
+      "id": "309887156",
+      "characters": [
+        "Luis"
+      ]
+    }
+  ],
+  "alternate_ids": {
+    "imdb": "0478970"
+  },
+  "links": {
+    "self": "http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies\/770680853.json",
+    "alternate": "http:\/\/www.rottentomatoes.com\/m\/antman\/",
+    "cast": "http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies\/770680853\/cast.json",
+    "reviews": "http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies\/770680853\/reviews.json",
+    "similar": "http:\/\/api.rottentomatoes.com\/api\/public\/v1.0\/movies\/770680853\/similar.json"
+  },
+  "dateInTop": "2015-09-01-12",
+  "rank": 8,
+  "movieId": "770680853",
+  "modeFlag": "movieMode",
+  "rtTriples": [
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasRating"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "PG-13"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "Ant-Man"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasReleaseDate"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "2015-07-17"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasId"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "770680853"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasSynopsis"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "The next evolution of the Marvel Cinematic Universe brings a founding member of The Avengers to the big screen for the first time with Marvel Studios' \"Ant-Man.\" Armed with the astonishing ability to shrink in scale but increase in strength, master thief Scott Lang must embrace his inner-hero and help his mentor, Dr. Hank Pym, protect the secret behind his spectacular Ant-Man suit from a new generation of towering threats. Against seemingly insurmountable obstacles, Pym and Lang must plan and pull off a heist that will save the world. -- (C) Marvel"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/ontology\/Film"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasReview"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "http:\/\/entertainment.suntimes.com\/movies\/ant-man-marvel-movies-go-small-scale-ambition\/"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasReview"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "http:\/\/www.chicagoreader.com\/chicago\/ant-man\/MovieTimes?oid=17961218"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasReview"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "http:\/\/christylemire.com\/ant-man\/"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasReview"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "http:\/\/www.newyorker.com\/magazine\/2015\/07\/27\/small-victories"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasReview"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "http:\/\/www.theatlantic.com\/entertainment\/archive\/2015\/07\/ant-man-a-small-defeat-for-marvel\/398777\/"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasCastMember"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "Paul Rudd"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasCastMember"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "Michael Douglas"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasCastMember"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "Evangeline Lilly"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasCastMember"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "Corey Stoll"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "Ant-Man"
+        },
+        "predicate": {
+          "value": "hasCastMember"
+        },
+        "object": {
+          "datatype": "http:\/\/www.w3.org\/2001\/XMLSchema#string",
+          "value": "Michael Pena"
+        }
+      }
+    }
+  ],
+  "dbpTriples": [
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type"
+        },
+        "object": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#Thing"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type"
+        },
+        "object": {
+          "value": "http:\/\/www.wikidata.org\/entity\/Q386724"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/ontology\/Film"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/ontology\/Wikidata:Q11424"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/ontology\/Work"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type"
+        },
+        "object": {
+          "value": "http:\/\/schema.org\/CreativeWork"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#type"
+        },
+        "object": {
+          "value": "http:\/\/schema.org\/Movie"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs"
+        },
+        "object": {
+          "value": "http:\/\/rdf.freebase.com\/ns\/m.0bbcrq"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs"
+        },
+        "object": {
+          "value": "http:\/\/fr.dbpedia.org\/resource\/Ant-Man_(film)"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs"
+        },
+        "object": {
+          "value": "http:\/\/es.dbpedia.org\/resource\/Ant-Man_(pel\u00edcula)"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs"
+        },
+        "object": {
+          "value": "http:\/\/pl.dbpedia.org\/resource\/Ant-Man_(film)"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs"
+        },
+        "object": {
+          "value": "http:\/\/cs.dbpedia.org\/resource\/Ant-Man_(film)"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs"
+        },
+        "object": {
+          "value": "http:\/\/id.dbpedia.org\/resource\/Ant-Man_(film)"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs"
+        },
+        "object": {
+          "value": "http:\/\/it.dbpedia.org\/resource\/Ant-Man_(film)"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs"
+        },
+        "object": {
+          "value": "http:\/\/ko.dbpedia.org\/resource\/\uc564\ud2b8\ub9e8_(\uc601\ud654)"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs"
+        },
+        "object": {
+          "value": "http:\/\/pt.dbpedia.org\/resource\/Homem-Formiga_(filme)"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs"
+        },
+        "object": {
+          "value": "http:\/\/wikidata.dbpedia.org\/resource\/Q5901134"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2002\/07\/owl#sameAs"
+        },
+        "object": {
+          "value": "http:\/\/wikidata.org\/entity\/Q5901134"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/align"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/caption"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/cinematography"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Russell_Carpenter"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/colwidth"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/country"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/director"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Peyton_Reed"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/distributor"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Walt_Disney_Studios_Motion_Pictures"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/editing"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/language"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/music"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Christophe_Beck"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/producer"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Kevin_Feige"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/quote"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/quote"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/screenplay"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/source"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/source"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/starring"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/story"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/studio"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Marvel_Studios"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/width"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#label"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#comment"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#comment"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#comment"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#comment"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#comment"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#comment"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/2000\/01\/rdf-schema#comment"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:2015_films"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Films_based_on_works_by_Jack_Kirby"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Heist_films"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:IMAX_films"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Marvel_Cinematic_Universe_films"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Films_shot_in_Atlanta,_Georgia"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Films_based_on_works_by_Stan_Lee"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Films_shot_in_Georgia_(U.S._state)"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:American_science_fiction_action_films"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:English-language_films"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Films_about_insects"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Films_set_in_San_Francisco,_California"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Films_shot_in_San_Francisco,_California"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Performance_capture_in_film"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Size_change_in_fiction"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Screenplays_by_Adam_McKay"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Screenplays_by_Paul_Rudd"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:2010s_action_films"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/purl.org\/dc\/terms\/subject"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Category:Films_directed_by_Peyton_Reed"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/wikiPageID"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/wikiPageRevisionID"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/wikiPageExternalLink"
+        },
+        "object": {
+          "value": "http:\/\/marvel.com\/antman"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/xmlns.com\/foaf\/0.1\/name"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/xmlns.com\/foaf\/0.1\/homepage"
+        },
+        "object": {
+          "value": "http:\/\/marvel.com\/antman"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/property\/name"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/xmlns.com\/foaf\/0.1\/depiction"
+        },
+        "object": {
+          "value": "http:\/\/commons.wikimedia.org\/wiki\/Special:FilePath\/Ant-Man_SDCC_2014_panel.jpg"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/www.w3.org\/ns\/prov#wasDerivedFrom"
+        },
+        "object": {
+          "value": "http:\/\/en.wikipedia.org\/wiki\/Ant-Man_(film)?oldid=645343040"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/abstract"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/abstract"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/abstract"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/abstract"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/abstract"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/abstract"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/abstract"
+        },
+        "object": {
+          "value": ""
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/cinematography"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Russell_Carpenter"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/director"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Peyton_Reed"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/distributor"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Walt_Disney_Studios_Motion_Pictures"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/musicComposer"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Christophe_Beck"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/producer"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Kevin_Feige"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/starring"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Michael_Pe\u00f1a"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/starring"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Evangeline_Lilly"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/starring"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Wood_Harris"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/starring"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Corey_Stoll"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/starring"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/T.I."
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/starring"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/David_Dastmalchian"
+        }
+      }
+    },
+    {
+      "triple": {
+        "subject": {
+          "value": "http:\/\/dbpedia.org\/resource\/Ant-Man_(film)"
+        },
+        "predicate": {
+          "value": "http:\/\/dbpedia.org\/ontology\/starring"
+        },
+        "object": {
+          "value": "http:\/\/dbpedia.org\/resource\/Jordi_Moll\u00e0"
+        }
+      }
+    }
+  ]
+},
+xdmp.defaultPermissions(),
+xdmp.defaultCollections()
+)</query><query name="DeleteJSONDocOrRules" focus="false" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">(: If deleting /rules/incentives.rules don't forget to switch to Schemas database :)
+
+xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+xdmp:document-delete("/rules/incentives.rules")
+(: xdmp:document-delete("/docs/movie.json") :)</query><query name="ViewCustomRules" focus="false" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+fn:doc("/rules/incentives.rules")</query><query name="FindPossibleBrandRevenue" focus="false" active="true" content-source="as:9446926577974576079:" mode="javascript">var sem = require("/MarkLogic/semantics.xqy");
+var store = sem.rulesetStore("rdfs.rules", sem.store());
+
+var res = sem.sparql(" \n\
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;  \n\
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt; \n\
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; \n\
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt; \n\
+PREFIX wb:	&lt;http://wb.com/props#&gt; \n\
+ \n\
+SELECT ?s ?p ?o \n\
+WHERE  \n\
+{  \n\
+    ?s wb:possibleBrandRevenue ?o . \n\
+ BIND (wb:possibleBrandRevenue AS ?p) \n\
+} \n\
+",[],[],store);
+
+var resArray = res.toArray();
+var resStr = res.toString();
+
+xdmp.log(resStr);
+xdmp.setResponseContentType("text/html");
+//var result = new NodeBuilder();
+//result.addElement("HTML",String(resStr),"http://www.w3.org/1999/xhtml");
+//result.toNode();
+resArray;</query><query name="FindActingCoolWithBIND" focus="false" active="true" content-source="as:9446926577974576079:" mode="javascript">// query
+var sem = require("/MarkLogic/semantics.xqy");
+var store = sem.rulesetStore("rdfs.rules", sem.store());
+
+var res = sem.sparql(" \n\
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;  \n\
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt; \n\
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; \n\
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt; \n\
+PREFIX wb:	&lt;http://wb.com/props#&gt; \n\
+ \n\
+SELECT ?s ?p ?o \n\
+WHERE  \n\
+{  \n\
+    ?s wb:actingCool  ?o.  \n\
+BIND (wb:actingCool AS ?p) \n\
+} \n\
+",[],[],store);
+
+var resArray = res.toArray();
+var resStr = res.toString();
+
+xdmp.log(resStr);
+xdmp.setResponseContentType("text/html");
+//var result = new NodeBuilder();
+//result.addElement("HTML",String(resStr),"http://www.w3.org/1999/xhtml");
+//result.toNode();
+resArray;</query><query name="ForestStatus" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+xdmp:forest-status(xdmp:forest("Documents"))</query><query name="CtsWordQuery" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+cts:search(fn:doc(), cts:word-query("awesome"))</query><query name="FindActingCoolWithFilter" focus="false" active="true" content-source="as:9446926577974576079:" mode="javascript">// query
+var sem = require("/MarkLogic/semantics.xqy");
+var store = sem.rulesetStore("rdfs.rules", sem.store());
+
+var res = sem.sparql(" \n\
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;  \n\
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt; \n\
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; \n\
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt; \n\
+PREFIX wb:	&lt;http://wb.com/props#&gt; \n\
+ \n\
+SELECT ?s ?p ?o \n\
+WHERE  \n\
+{  \n\
+    ?s ?p  ?o.  \n\
+FILTER (?p = wb:actingCool) \n\
+} \n\
+",[],[],store);
+
+var resArray = res.toArray();
+var resStr = res.toString();
+
+xdmp.log(resStr);
+xdmp.setResponseContentType("text/html");
+//var result = new NodeBuilder();
+//result.addElement("HTML",String(resStr),"http://www.w3.org/1999/xhtml");
+//result.toNode();
+resArray;</query><query name="getUrisInCollection" focus="false" active="true" content-source="as:9446926577974576079:" mode="xquery">xquery version "1.0-ml";
+declare namespace html = "http://www.w3.org/1999/xhtml";
+
+
+
+let $uris := fn:collection("tweetsSentiments")/xdmp:node-uri(.)
+for $i in $uris
+return $i</query><query name="LoadCustomerRule3" focus="false" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
+xdmp:document-insert(
+'/rules/incentives.rules',
+text{
+'
+# Incentive rules for inference
+
+PREFIX si:	&lt;http://si.gov/si:&gt;
+PREFIX cat: &lt;http://dbpedia.org/resource/Category:&gt;
+PREFIX wb:	&lt;http://wb.com/props#&gt;
+PREFIX corp:	&lt;http://corp.com/corp:&gt;
+PREFIX partner: &lt;http://corp.com/partner:&gt;
+
+ 
+rule "has New York tax incentives" CONSTRUCT {
+?f si:hasTaxIncentives "New_York_Tax_Incentives"
+} {
+?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/NewYork&gt; .
+&lt;http://dbpedia.org/ontology/NewYork&gt; si:hasTaxIncentives "New_York_Tax_Incentives"
+
+}
+
+rule "has California tax incentives" CONSTRUCT {
+?f si:hasTaxIncentives "California_Tax_Incentives"
+} {
+?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/California&gt; .
+&lt;http://dbpedia.org/ontology/California&gt; si:hasTaxIncentives "California_Tax_Incentives"
+
+}
+
+rule "has Texas tax incentives" CONSTRUCT {
+?f si:hasTaxIncentives "Texas_Tax_Incentives"
+} {
+?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/Texas&gt; .
+&lt;http://dbpedia.org/ontology/Texas&gt; si:hasTaxIncentives "Texas_Tax_Incentives"
+
+}
+
+rule "has Arizona tax incentives" CONSTRUCT {
+?f si:hasTaxIncentives "Arizona_Tax_Incentives"
+} {
+?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/Arizona&gt; .
+&lt;http://dbpedia.org/ontology/Arizona&gt; si:hasTaxIncentives "Arizona_Tax_Incentives"
+
+}
+
+rule "has Pennsylvania tax incentives" CONSTRUCT {
+?f si:hasTaxIncentives "Pennsylvania_Tax_Incentives"
+} {
+?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/Pennsylvania&gt; .
+&lt;http://dbpedia.org/ontology/Pennsylvania&gt; si:hasTaxIncentives "Pennsylvania_Tax_Incentives"
+
+}
+
+rule "has Starbucks Partner Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:hasProgram&gt; "Starbucks_Partner_Program"
+} {
+?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:Starbucks&gt; .
+&lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasProgram&gt; "Starbucks_Partner_Program"
+
+}
+
+rule "has IBM Partner Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:hasProgram&gt; "IBM_Partner_Program"
+} {
+?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:IBM&gt; .
+&lt;http://corp.com/corp:IBM&gt; &lt;http://corp.com/partner:hasProgram&gt; "IBM_Partner_Program"
+
+}
+
+rule "has MacDonalds Partner Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:hasProgram&gt; "MacDonalds_Partner_Program"
+} {
+?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:MacDonalds&gt; .
+&lt;http://corp.com/corp:MacDonalds&gt; &lt;http://corp.com/partner:hasProgram&gt; "MacDonalds_Partner_Program"
+
+}
+
+rule "has Nike Partner Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:hasProgram&gt; "Nike_Partner_Program"
+} {
+?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:Nike&gt; .
+&lt;http://corp.com/corp:Nike&gt; &lt;http://corp.com/partner:hasProgram&gt; "Nike_Partner_Program"
+
+}
+
+rule "has Tesla Partner Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:hasProgram&gt; "Tesla_Partner_Program"
+} {
+?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:Tesla&gt; .
+&lt;http://corp.com/corp:Tesla&gt; &lt;http://corp.com/partner:hasProgram&gt; "Tesla_Partner_Program"
+
+}
+
+rule "has Walmart Partner Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:hasProgram&gt; "Walmart_Partner_Program"
+} {
+?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:Walmart&gt; .
+&lt;http://corp.com/corp:Walmart&gt; &lt;http://corp.com/partner:hasProgram&gt; "Walmart_Partner_Program"
+
+}
+
+rule "has Coke Partner Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:hasProgram&gt; "Coke_Partner_Program"
+} {
+?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:Coke&gt; .
+&lt;http://corp.com/corp:Coke&gt; &lt;http://corp.com/partner:hasProgram&gt; "Coke_Partner_Program"
+
+}
+
+
+
+'
+}
+)
+</query><query name="IncertIncentives2" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql-update">## insert some ontology data into http://marklogic.com/semantics/mm/movies-1
+
+INSERT DATA 
+{ 
+&lt;http://dbpedia.org/ontology/NewYork&gt; &lt;http://si.gov/si:hasTaxIncentives&gt; "New_York_Tax_Incentives" .
+&lt;http://dbpedia.org/ontology/California&gt; &lt;http://si.gov/si:hasTaxIncentives&gt; "California_Tax_Incentives" .
+&lt;http://dbpedia.org/ontology/Texas&gt;  &lt;http://si.gov/si:hasTaxIncentives&gt; "Texas_Tax_Incentives" .
+&lt;http://dbpedia.org/ontology/Arizona&gt;  &lt;http://si.gov/si:hasTaxIncentives&gt; "Arizona_Tax_Incentives"
+}
+
+</query><query name="LoadOntology" focus="true" active="true" content-source="as:9446926577974576079:" mode="sparql-update">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; 
+PREFIX prov:	&lt;http://www.w3.org/ns/prov#&gt;
+PREFIX ns8:	&lt;http://mappings.dbpedia.org/index.php/OntologyClass:&gt;
+PREFIX owl:	&lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX wdrs:	&lt;http://www.w3.org/2007/05/powder-s#&gt;
+PREFIX ns2:	&lt;http://open.vocab.org/terms/&gt;
+PREFIX ns5:	&lt;http://dbpedia.org/ontology/Wikidata:&gt;
+PREFIX ns6:	&lt;http://schema.org/&gt;
+PREFIX wdrs:	&lt;http://www.w3.org/2007/05/powder-s#&gt;
+PREFIX ns0:	&lt;http://open.vocab.org/terms/&gt;
+PREFIX dul:	&lt;http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#&gt;
+PREFIX ns7:	&lt;http://mappings.dbpedia.org/index.php/OntologyClass:&gt;
+PREFIX wdrs:	&lt;http://www.w3.org/2007/05/powder-s#&gt;
+PREFIX wb:	&lt;http://wb.com/props#&gt;
+
+
+## insert some ontology data into http://marklogic.com/semantics/mm/movies-1
+INSERT DATA 
+{ 
+
+wb:hasRightsTo	rdfs:subPropertyOf	wb:owedRevenueFrom .
+wb:wrote	rdfs:subPropertyOf	wb:hasRightsTo .
+wb:coWrote	rdfs:subPropertyOf	wb:wrote .
+wb:fightingIn rdfs:subPropertyOf wb:actingCool .
+wb:romancingIn rdfs:subPropertyOf wb:actingCool .
+wb:drivingIn rdfs:subPropertyOf wb:actingCool .
+wb:golfingIn rdfs:subPropertyOf wb:inLeisureSport .
+wb:fishingIn rdfs:subPropertyOf wb:inLeisureSport .
+wb:swimmingIn rdfs:subPropertyOf wb:inLeisureSport .
+wb:runningIn rdfs:subPropertyOf wb:inLeisureSport .
+wb:actingCool rdfs:subPropertyOf wb:lifeStyleRevenue .
+wb:inLeisureSport rdfs:subPropertyOf wb:lifeStyleRevenue .
+dbpedia-owl:Brooklyn rdfs:subClassOf dbpedia-owl:NewYork .
+dbpedia-owl:nlaId	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:Agent rdfs:subClassOf dbpedia-owl:Family		 .
+dbpedia-owl:age	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:generalCouncil	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:juniorSeason	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:managerSeason	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:nationalSelection	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:playerSeason	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:firstOwner	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:ideology	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:viafId	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:discipline	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:artist	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:season	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:	ns2:defines	dbpedia-owl:Agent .
+dbpedia-owl:editor	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:artPatron	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:regionalCouncil	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:Agent	rdf:type	owl:Class .
+dbpedia-owl:Agent	owl:equivalentClass	dul:Agent ;
+	owl:sameAs	dbpedia-owl:Agent ;
+	rdfs:subClassOf	owl:Thing ;
+	rdfs:label	"\u30A8\u30FC\u30B8\u30A7\u30F3\u30C8"@ja ,
+		"agente"@it ,
+		"agent"@nl ,
+		"agente"@es ,
+		"agent"@fr ,
+		"agent"@en ,
+		"Agent"@de ,
+		"\u03C0\u03C1\u03AC\u03BA\u03C4\u03BF\u03C1\u03B1\u03C2" .
+dbpedia-owl:Agent	prov:wasDerivedFrom	ns7:Agent ;
+	rdfs:comment	"Analogous to a foaf:Agent, an agent is an entity that acts. This is intended to be the super class of Person and Organisation."@en ,
+		"\u0391\u03BD\u03AC\u03BB\u03BF\u03B3\u03B1 \u03BC\u03B5 \u03C4\u03B7\u03BD \u03BA\u03BB\u03AC\u03C3\u03B7 foaf:Agent, \u03AD\u03BD\u03B1\u03C2 \u03C0\u03C1\u03AC\u03BA\u03C4\u03BF\u03C1\u03B1\u03C2 \u03B5\u03AF\u03BD\u03B1\u03B9 \u03BC\u03B9\u03B1 \u03BF\u03BD\u03C4\u03CC\u03C4\u03B7\u03C4\u03B1 \u03C0\u03BF\u03C5 \u03B5\u03BD\u03B5\u03C1\u03B3\u03B5\u03AF. \u0391\u03C5\u03C4\u03CC \u03C0\u03C1\u03BF\u03BF\u03C1\u03AF\u03B6\u03B5\u03C4\u03B1\u03B9 \u03BD\u03B1 \u03B5\u03AF\u03BD\u03B1\u03B9 \u03BC\u03B9\u03B1 \u03C5\u03C0\u03B5\u03C1\u03BA\u03BB\u03AC\u03C3\u03B7 \u03C4\u03B7\u03C2 \u03BA\u03BB\u03AC\u03C3\u03B7\u03C2 \u0386\u03C4\u03CC\u03BC\u03BF \u03BA\u03B1\u03B9 \u039F\u03C1\u03B3\u03B1\u03BD\u03B9\u03C3\u03BC\u03CC\u03C2." ;
+	owl:disjointWith	dbpedia-owl:Place ;
+	rdfs:isDefinedBy	dbpedia-owl: .
+dbpedia-owl:Agent	wdrs:describedby	&lt;http://dbpedia.org/ontology/data/definitions.ttl&gt; ,
+		&lt;http://dbpedia.org/ontology/data/definitions.jsonld&gt; ,
+		&lt;http://dbpedia.org/ontology/data/definitions.xml&gt; .
+dbpedia-owl:Agent	rdfs:subClassOf	 dbpedia-owl:Person.
+dbpedia-owl:hometown	rdfs:domain	dbpedia-owl:Agent .
+dbpedia-owl:developer	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:currentWorldChampion	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:Agent rdfs:subClassOf dbpedia-owl:Organisation		 .
+dbpedia-owl:animator	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:owner	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:producer	rdfs:range	dbpedia-owl:Agent .
+&lt;http://dbpedia.org/ontology/data/definitions.xml&gt;	ns2:describes	dbpedia-owl:Agent .
+&lt;http://dbpedia.org/ontology/data/definitions.ttl&gt;	ns2:describes	dbpedia-owl:Agent .
+&lt;http://dbpedia.org/ontology/data/definitions.jsonld&gt;	ns2:describes	dbpedia-owl:Agent .
+dbpedia-owl:foundedBy	rdfs:range	dbpedia-owl:Agent .
+dbpedia-owl:honours	rdfs:domain	dbpedia-owl:Agent .
+}</query></workspace></export>
