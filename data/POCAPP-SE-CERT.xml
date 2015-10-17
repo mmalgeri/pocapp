@@ -2558,7 +2558,7 @@ declare namespace html = "http://www.w3.org/1999/xhtml";
 
 let $uris := fn:collection("tweetsSentiments")/xdmp:node-uri(.)
 for $i in $uris
-return $i</query><query name="LoadCustomerRule3" focus="false" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
+return $i</query><query name="LoadCustomerRule3" focus="true" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
 xdmp:document-insert(
 '/rules/incentives.rules',
 text{
@@ -2668,6 +2668,14 @@ rule "has Coke Partner Program" CONSTRUCT {
 
 }
 
+rule "has Starbucks GolfLifeStyle Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_GolfLifeStyle_Program"
+} {
+?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Golfing&gt; .
+&lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_GolfLifeStyle_Program"
+
+}
+
 
 
 '
@@ -2683,7 +2691,7 @@ INSERT DATA
 &lt;http://dbpedia.org/ontology/Arizona&gt;  &lt;http://si.gov/si:hasTaxIncentives&gt; "Arizona_Tax_Incentives"
 }
 
-</query><query name="LoadOntology" focus="true" active="true" content-source="as:9446926577974576079:" mode="sparql-update">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+</query><query name="LoadOntology" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql-update">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
 PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; 
 PREFIX prov:	&lt;http://www.w3.org/ns/prov#&gt;
