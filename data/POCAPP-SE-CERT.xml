@@ -2732,6 +2732,21 @@ rule "has IBM BikeLifeStyle Program" CONSTRUCT {
 
 }
 
+rule "has The Martian contributor Program" CONSTRUCT {
+?f &lt;http://corp.com/corp:inContributorProgram&gt; "The_Martian_Contributor_Program"
+} {
+?f &lt;http://wb.com/props#contributedTo&gt; &lt;http://corp.com/corp:The_Martian&gt; .
+&lt;http://corp.com/corp:TheMartian&gt; &lt;http://corp.com/corp:hasContributorProgram&gt; "The_Martian_Contributor_Program"
+
+}
+
+rule "has Shrek contributor Program" CONSTRUCT {
+?f &lt;http://corp.com/corp:inContributorProgram&gt; "Shrek_Contributor_Program"
+} {
+?f &lt;http://wb.com/props#contributedTo&gt; &lt;http://corp.com/corp:Shrek&gt; .
+&lt;http://corp.com/corp:Shrek&gt; &lt;http://corp.com/corp:hasContributorProgram&gt; "Shrek_Contributor_Program"
+
+}
 
 
 '
