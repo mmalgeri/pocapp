@@ -60,7 +60,6 @@ xdmp.log("Got triple info and inserting subject = " + subject + " predicate = " 
   var ahoc = {'modeFlag': 'adHocMode'};
   tripleArray.push(aTriple);
   ahoc.ahocTriples = tripleArray;
-  ahoc.actorName=subject;
   var randNum = xdmp.random(100000);
   var docName = fn.concat('adHocTriple-',randNum,'.json');
   xdmp.documentInsert(docName ,ahoc, null,"adHocTriple");
