@@ -13,7 +13,7 @@ PREFIX partner: <http://corp.com/partner:> \n\
 SELECT ?s ?o \n\
 WHERE  \n\
 {  \n\
-    ?s partner:hasProgram ?o  \n\
+    ?s partner:inProgram ?o  \n\
 } \n\
 ",[],[],store);
 

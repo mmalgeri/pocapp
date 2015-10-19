@@ -12,7 +12,7 @@ PREFIX si:	<http://si.gov/si:> \n\
 SELECT ?s ?o \n\
 WHERE  \n\
 {  \n\
-    ?s si:hasTaxIncentives ?o  \n\
+    ?s si:getsTaxIncentives ?o  \n\
 } \n\
 ",[],[],store);
 

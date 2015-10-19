@@ -2573,7 +2573,7 @@ PREFIX partner: &lt;http://corp.com/partner:&gt;
 
  
 rule "has New York tax incentives" CONSTRUCT {
-?f si:hasTaxIncentives "New_York_Tax_Incentives"
+?f si:getsTaxIncentives "New_York_Tax_Incentives"
 } {
 ?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/NewYork&gt; .
 &lt;http://dbpedia.org/ontology/NewYork&gt; si:hasTaxIncentives "New_York_Tax_Incentives"
@@ -2581,7 +2581,7 @@ rule "has New York tax incentives" CONSTRUCT {
 }
 
 rule "has California tax incentives" CONSTRUCT {
-?f si:hasTaxIncentives "California_Tax_Incentives"
+?f si:getsTaxIncentives "California_Tax_Incentives"
 } {
 ?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/California&gt; .
 &lt;http://dbpedia.org/ontology/California&gt; si:hasTaxIncentives "California_Tax_Incentives"
@@ -2589,7 +2589,7 @@ rule "has California tax incentives" CONSTRUCT {
 }
 
 rule "has Texas tax incentives" CONSTRUCT {
-?f si:hasTaxIncentives "Texas_Tax_Incentives"
+?f si:getsTaxIncentives "Texas_Tax_Incentives"
 } {
 ?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/Texas&gt; .
 &lt;http://dbpedia.org/ontology/Texas&gt; si:hasTaxIncentives "Texas_Tax_Incentives"
@@ -2597,7 +2597,7 @@ rule "has Texas tax incentives" CONSTRUCT {
 }
 
 rule "has Arizona tax incentives" CONSTRUCT {
-?f si:hasTaxIncentives "Arizona_Tax_Incentives"
+?f si:getsTaxIncentives "Arizona_Tax_Incentives"
 } {
 ?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/Arizona&gt; .
 &lt;http://dbpedia.org/ontology/Arizona&gt; si:hasTaxIncentives "Arizona_Tax_Incentives"
@@ -2605,7 +2605,7 @@ rule "has Arizona tax incentives" CONSTRUCT {
 }
 
 rule "has Pennsylvania tax incentives" CONSTRUCT {
-?f si:hasTaxIncentives "Pennsylvania_Tax_Incentives"
+?f si:getsTaxIncentives "Pennsylvania_Tax_Incentives"
 } {
 ?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/Pennsylvania&gt; .
 &lt;http://dbpedia.org/ontology/Pennsylvania&gt; si:hasTaxIncentives "Pennsylvania_Tax_Incentives"
@@ -2613,7 +2613,7 @@ rule "has Pennsylvania tax incentives" CONSTRUCT {
 }
 
 rule "has Starbucks Partner Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasProgram&gt; "Starbucks_Partner_Program"
+?f &lt;http://corp.com/partner:inProgram&gt; "Starbucks_Partner_Program"
 } {
 ?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:Starbucks&gt; .
 &lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasProgram&gt; "Starbucks_Partner_Program"
@@ -2621,7 +2621,7 @@ rule "has Starbucks Partner Program" CONSTRUCT {
 }
 
 rule "has IBM Partner Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasProgram&gt; "IBM_Partner_Program"
+?f &lt;http://corp.com/partner:inProgram&gt; "IBM_Partner_Program"
 } {
 ?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:IBM&gt; .
 &lt;http://corp.com/corp:IBM&gt; &lt;http://corp.com/partner:hasProgram&gt; "IBM_Partner_Program"
@@ -2629,7 +2629,7 @@ rule "has IBM Partner Program" CONSTRUCT {
 }
 
 rule "has MacDonalds Partner Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasProgram&gt; "MacDonalds_Partner_Program"
+?f &lt;http://corp.com/partner:inProgram&gt; "MacDonalds_Partner_Program"
 } {
 ?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:MacDonalds&gt; .
 &lt;http://corp.com/corp:MacDonalds&gt; &lt;http://corp.com/partner:hasProgram&gt; "MacDonalds_Partner_Program"
@@ -2637,7 +2637,7 @@ rule "has MacDonalds Partner Program" CONSTRUCT {
 }
 
 rule "has Nike Partner Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasProgram&gt; "Nike_Partner_Program"
+?f &lt;http://corp.com/partner:inProgram&gt; "Nike_Partner_Program"
 } {
 ?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:Nike&gt; .
 &lt;http://corp.com/corp:Nike&gt; &lt;http://corp.com/partner:hasProgram&gt; "Nike_Partner_Program"
@@ -2645,7 +2645,7 @@ rule "has Nike Partner Program" CONSTRUCT {
 }
 
 rule "has Tesla Partner Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasProgram&gt; "Tesla_Partner_Program"
+?f &lt;http://corp.com/partner:inProgram&gt; "Tesla_Partner_Program"
 } {
 ?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:Tesla&gt; .
 &lt;http://corp.com/corp:Tesla&gt; &lt;http://corp.com/partner:hasProgram&gt; "Tesla_Partner_Program"
@@ -2653,7 +2653,7 @@ rule "has Tesla Partner Program" CONSTRUCT {
 }
 
 rule "has Walmart Partner Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasProgram&gt; "Walmart_Partner_Program"
+?f &lt;http://corp.com/partner:inProgram&gt; "Walmart_Partner_Program"
 } {
 ?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:Walmart&gt; .
 &lt;http://corp.com/corp:Walmart&gt; &lt;http://corp.com/partner:hasProgram&gt; "Walmart_Partner_Program"
@@ -2661,7 +2661,7 @@ rule "has Walmart Partner Program" CONSTRUCT {
 }
 
 rule "has Coke Partner Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasProgram&gt; "Coke_Partner_Program"
+?f &lt;http://corp.com/partner:inProgram&gt; "Coke_Partner_Program"
 } {
 ?f &lt;http://wb.com/props#hasLogo&gt; &lt;http://corp.com/corp:Coke&gt; .
 &lt;http://corp.com/corp:Coke&gt; &lt;http://corp.com/partner:hasProgram&gt; "Coke_Partner_Program"
@@ -2669,7 +2669,7 @@ rule "has Coke Partner Program" CONSTRUCT {
 }
 
 rule "has Starbucks GolfLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_GolfLifeStyle_Program"
+?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "Starbucks_GolfLifeStyle_Program"
 } {
 ?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Golfing&gt; .
 &lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_GolfLifeStyle_Program"
@@ -2677,7 +2677,7 @@ rule "has Starbucks GolfLifeStyle Program" CONSTRUCT {
 }
 
 rule "has Starbucks SwimLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_SwimLifeStyle_Program"
+?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "Starbucks_SwimLifeStyle_Program"
 } {
 ?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Swimming&gt; .
 &lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_SwimLifeStyle_Program"
@@ -2685,7 +2685,7 @@ rule "has Starbucks SwimLifeStyle Program" CONSTRUCT {
 }
 
 rule "has Starbucks RunLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_RunLifeStyle_Program"
+?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "Starbucks_RunLifeStyle_Program"
 } {
 ?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Running&gt; .
 &lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_RunLifeStyle_Program"
@@ -2693,7 +2693,7 @@ rule "has Starbucks RunLifeStyle Program" CONSTRUCT {
 }
 
 rule "has Starbucks BikeLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_BikeLifeStyle_Program"
+?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "Starbucks_BikeLifeStyle_Program"
 } {
 ?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Biking&gt; .
 &lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_BikeLifeStyle_Program"
@@ -2701,7 +2701,7 @@ rule "has Starbucks BikeLifeStyle Program" CONSTRUCT {
 }
 
 rule "has IBM GolfLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_GolfLifeStyle_Program"
+?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "IBM_GolfLifeStyle_Program"
 } {
 ?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Golfing&gt; .
 &lt;http://corp.com/corp:IBM&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_GolfLifeStyle_Program"
@@ -2709,7 +2709,7 @@ rule "has IBM GolfLifeStyle Program" CONSTRUCT {
 }
 
 rule "has IBM SwimLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_SwimLifeStyle_Program"
+?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "IBM_SwimLifeStyle_Program"
 } {
 ?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Swimming&gt; .
 &lt;http://corp.com/corp:IBM&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_SwimLifeStyle_Program"
@@ -2717,7 +2717,7 @@ rule "has IBM SwimLifeStyle Program" CONSTRUCT {
 }
 
 rule "has IBM RunLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_RunLifeStyle_Program"
+?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "IBM_RunLifeStyle_Program"
 } {
 ?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Running&gt; .
 &lt;http://corp.com/corp:IBM&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_RunLifeStyle_Program"
@@ -2725,7 +2725,7 @@ rule "has IBM RunLifeStyle Program" CONSTRUCT {
 }
 
 rule "has IBM BikeLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_BikeLifeStyle_Program"
+?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "IBM_BikeLifeStyle_Program"
 } {
 ?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Biking&gt; .
 &lt;http://corp.com/corp:IBM&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_BikeLifeStyle_Program"
