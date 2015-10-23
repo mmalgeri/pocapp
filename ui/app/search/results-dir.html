@@ -5,7 +5,7 @@
 
 <div ng-if="result.uri.match('Actor_Tweet')">
   <h4><a ng-href="/detail?uri={{result.uri}}">An actor tweet {{result.extracted.content[0].actorName}}</a></h4>
-  <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json">src</a></div>
+  <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json" target="_BLANK">src</a></div>
   <div class="matches">
     <div ng-repeat="match in result.matches">
       <div ng-repeat="text in match['match-text']">{{text | decode}}</div>
@@ -15,7 +15,7 @@
  
  <div ng-if="result.uri.match('Movie_Tweet')">
   <h4><a ng-href="/detail?uri={{result.uri}}">A movie tweet for {{result.extracted.content[0].movieTitle}}</a></h4>
-  <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json">src</a></div>
+  <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json" target="_BLANK">src</a></div>
   <div class="matches">
     <div ng-repeat="match in result.matches">
       <div ng-repeat="text in match['match-text']">{{text | decode}}</div>
@@ -25,7 +25,7 @@
 
  <div ng-if="result.uri.match('MovieReview')">
   <h4><a ng-href="/detail?uri={{result.uri}}">A movie review for {{result.extracted.content[0].movieTitle}}</a></h4>
-  <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json">src</a></div>
+  <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json" target="_BLANK">src</a></div>
   <div class="matches">
     <div ng-repeat="match in result.matches">
       <div ng-repeat="text in match['match-text']">{{text | decode}}</div>
@@ -35,7 +35,7 @@
 
  <div ng-if="result.uri.match('Actor__Info')">
   <h4><a ng-href="/detail?uri={{result.uri}}">Actor information for {{result.extracted.content[0].actorName}} in {{result.extracted.content[0].movieTitle}}</a></h4>
-  <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json">src</a></div>
+  <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json" target="_BLANK">src</a></div>
   <div class="matches">
     <div ng-repeat="match in result.matches">
       <div ng-repeat="text in match['match-text']">{{text | decode}}</div>
@@ -45,7 +45,7 @@
 
  <div ng-if="result.uri.match('Movie__Info')">
   <h4><a ng-href="/detail?uri={{result.uri}}">Movie information for {{result.extracted.content[0].title}}</a></h4>
-  <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json">src</a></div>
+  <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json" target="_BLANK">src</a></div>
   <div class="matches">
     <div ng-repeat="match in result.matches">
       <!--<div ng-repeat="text in match['match-text']">{{text | decode}}</div> -->

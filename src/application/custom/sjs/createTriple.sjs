@@ -26,7 +26,7 @@ if ((predicate.indexOf("TaxIncentive") > -1) || (predicate.indexOf("Program") > 
     var params = {"subject": sem.iri(subBrand), "predicate": sem.iri("http://corp.com/partner:hasProgram"), "object": objBrand};
   }
   else if (predicate.indexOf("hasLifeStyleProgram") > -1){
-    //In next 2 lines finance guy will enter say "Starbucks"(no quotes) in subject and "GolfLifeStyle Program" for object
+    //In next 2 lines finance guy will enter say "Starbucks"(no quotes) in subject and "SportsLifeStyle Program" for object
     var subLifeStyle = "http://corp.com/corp:" + fn.replace (xdmp.getRequestField("subject"), ' ', '');
     var objLifeStyle = fn.replace(xdmp.getRequestField("subject"), ' ', '_') + "_" + fn.replace(xdmp.getRequestField("object"), ' ', '_');
     var params = {"subject": sem.iri(subLifeStyle), "predicate": sem.iri("http://corp.com/partner:hasLifeStyleProgram"), "object": objLifeStyle};
@@ -72,6 +72,7 @@ xdmp.log("Got triple info and inserting subject = " + subject + " predicate = " 
   ahoc.ahocTriples = tripleArray;
   var randNum = xdmp.random(100000);
   var docName = fn.concat('adHocTriple-',randNum,'.json');
+  xdmp.log("About to insert " + aTriple)
   xdmp.documentInsert(docName ,ahoc, null,"adHocTriple");
   xdmp.redirectResponse(home);
 }

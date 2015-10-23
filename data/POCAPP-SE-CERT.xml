@@ -2558,7 +2558,7 @@ declare namespace html = "http://www.w3.org/1999/xhtml";
 
 let $uris := fn:collection("tweetsSentiments")/xdmp:node-uri(.)
 for $i in $uris
-return $i</query><query name="LoadCustomerRule3" focus="true" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
+return $i</query><query name="LoadCustomerRule3" focus="false" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
 xdmp:document-insert(
 '/rules/incentives.rules',
 text{
@@ -2570,12 +2570,14 @@ PREFIX cat: &lt;http://dbpedia.org/resource/Category:&gt;
 PREFIX wb:	&lt;http://wb.com/props#&gt;
 PREFIX corp:	&lt;http://corp.com/corp:&gt;
 PREFIX partner: &lt;http://corp.com/partner:&gt;
-
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
  
 rule "has New York tax incentives" CONSTRUCT {
 ?f si:getsTaxIncentives "New_York_Tax_Incentives"
 } {
-?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/NewYork&gt; .
+?s rdfs:domain &lt;http://dbpedia.org/ontology/NewYork&gt; .
+?f &lt;http://wb.com/props#location&gt; ?s .
 &lt;http://dbpedia.org/ontology/NewYork&gt; si:hasTaxIncentives "New_York_Tax_Incentives"
 
 }
@@ -2583,7 +2585,8 @@ rule "has New York tax incentives" CONSTRUCT {
 rule "has California tax incentives" CONSTRUCT {
 ?f si:getsTaxIncentives "California_Tax_Incentives"
 } {
-?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/California&gt; .
+?s rdfs:domain &lt;http://dbpedia.org/ontology/California&gt; .
+?f &lt;http://wb.com/props#location&gt; ?s .
 &lt;http://dbpedia.org/ontology/California&gt; si:hasTaxIncentives "California_Tax_Incentives"
 
 }
@@ -2591,7 +2594,8 @@ rule "has California tax incentives" CONSTRUCT {
 rule "has Texas tax incentives" CONSTRUCT {
 ?f si:getsTaxIncentives "Texas_Tax_Incentives"
 } {
-?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/Texas&gt; .
+?s rdfs:domain &lt;http://dbpedia.org/ontology/Texas&gt; .
+?f &lt;http://wb.com/props#location&gt; ?s .
 &lt;http://dbpedia.org/ontology/Texas&gt; si:hasTaxIncentives "Texas_Tax_Incentives"
 
 }
@@ -2599,7 +2603,8 @@ rule "has Texas tax incentives" CONSTRUCT {
 rule "has Arizona tax incentives" CONSTRUCT {
 ?f si:getsTaxIncentives "Arizona_Tax_Incentives"
 } {
-?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/Arizona&gt; .
+?s rdfs:domain &lt;http://dbpedia.org/ontology/Arizona&gt; .
+?f &lt;http://wb.com/props#location&gt; ?s .
 &lt;http://dbpedia.org/ontology/Arizona&gt; si:hasTaxIncentives "Arizona_Tax_Incentives"
 
 }
@@ -2607,7 +2612,8 @@ rule "has Arizona tax incentives" CONSTRUCT {
 rule "has Pennsylvania tax incentives" CONSTRUCT {
 ?f si:getsTaxIncentives "Pennsylvania_Tax_Incentives"
 } {
-?f &lt;http://wb.com/props#location&gt; &lt;http://dbpedia.org/ontology/Pennsylvania&gt; .
+?s rdfs:domain &lt;http://dbpedia.org/ontology/Pennsylvania&gt; .
+?f &lt;http://wb.com/props#location&gt; ?s .
 &lt;http://dbpedia.org/ontology/Pennsylvania&gt; si:hasTaxIncentives "Pennsylvania_Tax_Incentives"
 
 }
@@ -2668,86 +2674,42 @@ rule "has Coke Partner Program" CONSTRUCT {
 
 }
 
-rule "has Starbucks GolfLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "Starbucks_GolfLifeStyle_Program"
+rule "has Starbucks SportsLifeStyle Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "Starbucks_SportsLifeStyle_Program"
 } {
-?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Golfing&gt; .
-&lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_GolfLifeStyle_Program"
+
+?s rdfs:domain &lt;http://dbpedia.org/ontology/SportsLifeStyle&gt; .
+?f &lt;http://wb.com/props#hasLifeStyle&gt; ?s .
+&lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_SportsLifeStyle_Program"
 
 }
 
-rule "has Starbucks SwimLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "Starbucks_SwimLifeStyle_Program"
+
+rule "has IBM SportsLifeStyle Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "IBM_SportsLifeStyle_Program"
 } {
-?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Swimming&gt; .
-&lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_SwimLifeStyle_Program"
+?s rdfs:domain &lt;http://dbpedia.org/ontology/SportsLifeStyle&gt; .
+?f &lt;http://wb.com/props#hasLifeStyle&gt; ?s .
+&lt;http://corp.com/corp:IBM&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_SportsLifeStyle_Program"
 
 }
 
-rule "has Starbucks RunLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "Starbucks_RunLifeStyle_Program"
-} {
-?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Running&gt; .
-&lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_RunLifeStyle_Program"
-
-}
-
-rule "has Starbucks BikeLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "Starbucks_BikeLifeStyle_Program"
-} {
-?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Biking&gt; .
-&lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Starbucks_BikeLifeStyle_Program"
-
-}
-
-rule "has IBM GolfLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "IBM_GolfLifeStyle_Program"
-} {
-?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Golfing&gt; .
-&lt;http://corp.com/corp:IBM&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_GolfLifeStyle_Program"
-
-}
-
-rule "has IBM SwimLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "IBM_SwimLifeStyle_Program"
-} {
-?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Swimming&gt; .
-&lt;http://corp.com/corp:IBM&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_SwimLifeStyle_Program"
-
-}
-
-rule "has IBM RunLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "IBM_RunLifeStyle_Program"
-} {
-?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Running&gt; .
-&lt;http://corp.com/corp:IBM&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_RunLifeStyle_Program"
-
-}
-
-rule "has IBM BikeLifeStyle Program" CONSTRUCT {
-?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "IBM_BikeLifeStyle_Program"
-} {
-?f &lt;http://wb.com/props#hasLifeStyle&gt; &lt;http://corp.com/corp:Biking&gt; .
-&lt;http://corp.com/corp:IBM&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "IBM_BikeLifeStyle_Program"
-
-}
-
-rule "has The Martian contributor Program" CONSTRUCT {
+rule "in The Martian contributor Program" CONSTRUCT {
 ?f &lt;http://corp.com/corp:inContributorProgram&gt; "The_Martian_Contributor_Program"
 } {
-?f &lt;http://wb.com/props#contributedTo&gt; &lt;http://corp.com/corp:The_Martian&gt; .
+?s rdfs:domain &lt;http://corp.com/corp:The_Martian_Contributor&gt; .
+?f &lt;http://wb.com/props#contributedTo&gt; ?s .
 &lt;http://corp.com/corp:TheMartian&gt; &lt;http://corp.com/corp:hasContributorProgram&gt; "The_Martian_Contributor_Program"
 
 }
-
-rule "has Shrek contributor Program" CONSTRUCT {
+rule "in Shrek contributor Program" CONSTRUCT {
 ?f &lt;http://corp.com/corp:inContributorProgram&gt; "Shrek_Contributor_Program"
 } {
-?f &lt;http://wb.com/props#contributedTo&gt; &lt;http://corp.com/corp:Shrek&gt; .
+?s rdfs:domain &lt;http://corp.com/corp:Shrek_Contributor&gt; .
+?f &lt;http://wb.com/props#contributedTo&gt; ?s .
 &lt;http://corp.com/corp:Shrek&gt; &lt;http://corp.com/corp:hasContributorProgram&gt; "Shrek_Contributor_Program"
 
 }
-
 
 '
 }
@@ -2762,7 +2724,7 @@ INSERT DATA
 &lt;http://dbpedia.org/ontology/Arizona&gt;  &lt;http://si.gov/si:hasTaxIncentives&gt; "Arizona_Tax_Incentives"
 }
 
-</query><query name="LoadOntology" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql-update">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+</query><query name="LoadOntology" focus="true" active="true" content-source="as:9446926577974576079:" mode="sparql-update">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
 PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; 
 PREFIX prov:	&lt;http://www.w3.org/ns/prov#&gt;
@@ -2778,12 +2740,29 @@ PREFIX dul:	&lt;http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#&gt;
 PREFIX ns7:	&lt;http://mappings.dbpedia.org/index.php/OntologyClass:&gt;
 PREFIX wdrs:	&lt;http://www.w3.org/2007/05/powder-s#&gt;
 PREFIX wb:	&lt;http://wb.com/props#&gt;
+PREFIX dbpedia-res: &lt;http://dbpedia.org/resource/&gt;
+PREFIX dbpedia-ont: &lt;http://dbpedia.org/ontology/&gt;
 
 
 ## insert some ontology data into http://marklogic.com/semantics/mm/movies-1
 INSERT DATA 
 { 
-
+&lt;http://corp.com/corp:TheMartian_CoWriter&gt;  rdfs:domain &lt;http://corp.com/corp:The_Martian_Contributor&gt; .  
+&lt;http://corp.com/corp:TheMartian_Extra&gt;  rdfs:domain &lt;http://corp.com/corp:The_Martian_Contributor&gt; .
+&lt;http://corp.com/corp:Shrek_CoWriter&gt;  rdfs:domain &lt;http://corp.com/corp:Shrek_Contributor&gt; .  
+&lt;http://corp.com/corp:Shrek_Extra&gt;  rdfs:domain &lt;http://corp.com/corp:Shrek_Contributor&gt; .  
+&lt;http://corp.com/corp:Shrek_Writer&gt;  rdfs:domain &lt;http://corp.com/corp:Shrek_Contributor&gt; .
+&lt;http://corp.com/corp:Tennis&gt;  rdfs:domain &lt;http://dbpedia.org/ontology/SportsLifeStyle&gt; .
+&lt;http://corp.com/corp:Golfing&gt;  rdfs:domain &lt;http://dbpedia.org/ontology/SportsLifeStyle&gt; .
+&lt;http://corp.com/corp:Running&gt;  rdfs:domain &lt;http://dbpedia.org/ontology/SportsLifeStyle&gt; .
+&lt;http://corp.com/corp:Swimming&gt;  rdfs:domain &lt;http://dbpedia.org/ontology/SportsLifeStyle&gt; .
+&lt;http://corp.com/corp:Biking&gt;  rdfs:domain &lt;http://dbpedia.org/ontology/SportsLifeStyle&gt; .
+&lt;http://corp.com/corp:Hiking&gt;  rdfs:domain &lt;http://dbpedia.org/ontology/SportsLifeStyle&gt; .
+&lt;http://dbpedia.org/ontology/Redondo_Beach&gt; rdfs:domain &lt;http://dbpedia.org/ontology/California&gt; .
+&lt;http://dbpedia.org/ontology/Fresno&gt; rdfs:domain &lt;http://dbpedia.org/ontology/California&gt; .
+&lt;http://dbpedia.org/ontology/Queens&gt; rdfs:domain &lt;http://dbpedia.org/ontology/NewYork&gt; .
+&lt;http://dbpedia.org/ontology/Brooklyn&gt; rdfs:domain &lt;http://dbpedia.org/ontology/NewYork&gt; .
+wb:hasHobby rdfs:subPropertyOf wb:hasLifeStyle .
 wb:hasRightsTo	rdfs:subPropertyOf	wb:owedRevenueFrom .
 wb:wrote	rdfs:subPropertyOf	wb:hasRightsTo .
 wb:coWrote	rdfs:subPropertyOf	wb:wrote .
@@ -2797,6 +2776,10 @@ wb:runningIn rdfs:subPropertyOf wb:inLeisureSport .
 wb:actingCool rdfs:subPropertyOf wb:lifeStyleRevenue .
 wb:inLeisureSport rdfs:subPropertyOf wb:lifeStyleRevenue .
 dbpedia-owl:Brooklyn rdfs:subClassOf dbpedia-owl:NewYork .
+dbpedia-res:Brooklyn rdfs:subClassOf dbpedia-ont:NewYork .
+dbpedia-res:Brooklyn rdfs:subClassOf dbpedia-ont:New_York .
+dbpedia-ont:Brooklyn rdfs:subClassOf dbpedia-ont:New_York .
+dbpedia-ont:Brooklyn rdfs:subClassOf dbpedia-ont:NewYork .
 dbpedia-owl:nlaId	rdfs:domain	dbpedia-owl:Agent .
 dbpedia-owl:Agent rdfs:subClassOf dbpedia-owl:Family		 .
 dbpedia-owl:age	rdfs:domain	dbpedia-owl:Agent .
@@ -2848,4 +2831,50 @@ dbpedia-owl:producer	rdfs:range	dbpedia-owl:Agent .
 &lt;http://dbpedia.org/ontology/data/definitions.jsonld&gt;	ns2:describes	dbpedia-owl:Agent .
 dbpedia-owl:foundedBy	rdfs:range	dbpedia-owl:Agent .
 dbpedia-owl:honours	rdfs:domain	dbpedia-owl:Agent .
-}</query></workspace></export>
+}</query><query name="Query 5" focus="false" active="true" content-source="as:12797409928459395502:" mode="javascript">var store = sem.rulesetStore(("rdfs.rules","/rules/incentives.rules"), sem.store());
+
+var res = sem.sparql(" \n\
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;  \n\
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt; \n\
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; \n\
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt; \n\
+PREFIX wb:	&lt;http://wb.com/props#&gt; \n\
+PREFIX si:	&lt;http://si.gov/si:&gt; \n\
+ \n\
+SELECT ?s ?o \n\
+WHERE  \n\
+{  \n\
+    ?s si:getsTaxIncentives ?o  \n\
+} \n\
+",[],[],store);
+
+var resArray = res.toArray();
+var resStr = res.toString();
+
+xdmp.log(resStr);
+xdmp.setResponseContentType("text/html");
+resArray;</query><query name="Query 6" focus="false" active="true" content-source="as:12797409928459395502:" mode="javascript">var store = sem.rulesetStore(("rdfs.rules","/rules/incentives.rules"), sem.store());
+
+var res = sem.sparql(" \n\
+PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;  \n\
+PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt; \n\
+PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; \n\
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt; \n\
+PREFIX wb:	&lt;http://wb.com/props#&gt; \n\
+PREFIX si:	&lt;http://si.gov/si:&gt; \n\
+PREFIX dbpedia-res: &lt;http://dbpedia.org/resource/&gt; \n\
+PREFIX dbpedia-ont: &lt;http://dbpedia.org/ontology/&gt; \n\
+ \n\
+SELECT ?s ?p \n\
+WHERE  \n\
+{  \n\
+     ?s ?p &lt;http://dbpedia.org/ontology/NewYork&gt; \n\
+} \n\
+",[],[],store);
+
+var resArray = res.toArray();
+var resStr = res.toString();
+
+xdmp.log(resStr);
+xdmp.setResponseContentType("text/html");
+resArray;</query></workspace></export>

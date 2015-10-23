@@ -1,5 +1,5 @@
 var sem = require("/MarkLogic/semantics.xqy");
-var store = sem.rulesetStore(("rdfs.rules","/rules/incentives.rules"), sem.store());
+var store = sem.rulesetStore(["rdfs.rules","/rules/incentives.rules"], sem.store());
 
 var res = sem.sparql(" \n\
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  \n\
