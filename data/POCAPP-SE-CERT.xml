@@ -2558,7 +2558,7 @@ declare namespace html = "http://www.w3.org/1999/xhtml";
 
 let $uris := fn:collection("tweetsSentiments")/xdmp:node-uri(.)
 for $i in $uris
-return $i</query><query name="LoadCustomerRule3" focus="false" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
+return $i</query><query name="LoadCustomerRule3" focus="true" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
 xdmp:document-insert(
 '/rules/incentives.rules',
 text{
@@ -2684,6 +2684,16 @@ rule "has Starbucks SportsLifeStyle Program" CONSTRUCT {
 
 }
 
+rule "has Tesla SportsLifeStyle Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "Tesla_SportsLifeStyle_Program"
+} {
+
+?s rdfs:domain &lt;http://dbpedia.org/ontology/SportsLifeStyle&gt; .
+?f &lt;http://wb.com/props#hasLifeStyle&gt; ?s .
+&lt;http://corp.com/corp:Tesla&gt; &lt;http://corp.com/partner:hasLifeStyleProgram&gt; "Tesla_SportsLifeStyle_Program"
+
+}
+
 
 rule "has IBM SportsLifeStyle Program" CONSTRUCT {
 ?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "IBM_SportsLifeStyle_Program"
@@ -2714,17 +2724,7 @@ rule "in Shrek contributor Program" CONSTRUCT {
 '
 }
 )
-</query><query name="IncertIncentives2" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql-update">## insert some ontology data into http://marklogic.com/semantics/mm/movies-1
-
-INSERT DATA 
-{ 
-&lt;http://dbpedia.org/ontology/NewYork&gt; &lt;http://si.gov/si:hasTaxIncentives&gt; "New_York_Tax_Incentives" .
-&lt;http://dbpedia.org/ontology/California&gt; &lt;http://si.gov/si:hasTaxIncentives&gt; "California_Tax_Incentives" .
-&lt;http://dbpedia.org/ontology/Texas&gt;  &lt;http://si.gov/si:hasTaxIncentives&gt; "Texas_Tax_Incentives" .
-&lt;http://dbpedia.org/ontology/Arizona&gt;  &lt;http://si.gov/si:hasTaxIncentives&gt; "Arizona_Tax_Incentives"
-}
-
-</query><query name="LoadOntology" focus="true" active="true" content-source="as:9446926577974576079:" mode="sparql-update">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+</query><query name="LoadOntology" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql-update">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
 PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; 
 PREFIX prov:	&lt;http://www.w3.org/ns/prov#&gt;
@@ -2760,8 +2760,14 @@ INSERT DATA
 &lt;http://corp.com/corp:Hiking&gt;  rdfs:domain &lt;http://dbpedia.org/ontology/SportsLifeStyle&gt; .
 &lt;http://dbpedia.org/ontology/Redondo_Beach&gt; rdfs:domain &lt;http://dbpedia.org/ontology/California&gt; .
 &lt;http://dbpedia.org/ontology/Fresno&gt; rdfs:domain &lt;http://dbpedia.org/ontology/California&gt; .
+&lt;http://dbpedia.org/ontology/Turlock&gt; rdfs:domain &lt;http://dbpedia.org/ontology/California&gt; .
 &lt;http://dbpedia.org/ontology/Queens&gt; rdfs:domain &lt;http://dbpedia.org/ontology/NewYork&gt; .
 &lt;http://dbpedia.org/ontology/Brooklyn&gt; rdfs:domain &lt;http://dbpedia.org/ontology/NewYork&gt; .
+&lt;http://dbpedia.org/ontology/Ithaca&gt; rdfs:domain &lt;http://dbpedia.org/ontology/NewYork&gt; .
+&lt;http://dbpedia.org/ontology/NewYork&gt; rdfs:domain &lt;http://dbpedia.org/ontology/NewYork&gt; .
+&lt;http://dbpedia.org/ontology/California&gt; rdfs:domain &lt;http://dbpedia.org/ontology/California&gt; .
+&lt;http://dbpedia.org/ontology/Arizona&gt; rdfs:domain &lt;http://dbpedia.org/ontology/Arizona&gt; .
+&lt;http://dbpedia.org/ontology/Pennsylvania&gt; rdfs:domain &lt;http://dbpedia.org/ontology/Pennsylvania&gt; .  
 wb:hasHobby rdfs:subPropertyOf wb:hasLifeStyle .
 wb:hasRightsTo	rdfs:subPropertyOf	wb:owedRevenueFrom .
 wb:wrote	rdfs:subPropertyOf	wb:hasRightsTo .
@@ -2831,50 +2837,4 @@ dbpedia-owl:producer	rdfs:range	dbpedia-owl:Agent .
 &lt;http://dbpedia.org/ontology/data/definitions.jsonld&gt;	ns2:describes	dbpedia-owl:Agent .
 dbpedia-owl:foundedBy	rdfs:range	dbpedia-owl:Agent .
 dbpedia-owl:honours	rdfs:domain	dbpedia-owl:Agent .
-}</query><query name="Query 5" focus="false" active="true" content-source="as:12797409928459395502:" mode="javascript">var store = sem.rulesetStore(("rdfs.rules","/rules/incentives.rules"), sem.store());
-
-var res = sem.sparql(" \n\
-PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;  \n\
-PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt; \n\
-PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; \n\
-PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt; \n\
-PREFIX wb:	&lt;http://wb.com/props#&gt; \n\
-PREFIX si:	&lt;http://si.gov/si:&gt; \n\
- \n\
-SELECT ?s ?o \n\
-WHERE  \n\
-{  \n\
-    ?s si:getsTaxIncentives ?o  \n\
-} \n\
-",[],[],store);
-
-var resArray = res.toArray();
-var resStr = res.toString();
-
-xdmp.log(resStr);
-xdmp.setResponseContentType("text/html");
-resArray;</query><query name="Query 6" focus="false" active="true" content-source="as:12797409928459395502:" mode="javascript">var store = sem.rulesetStore(("rdfs.rules","/rules/incentives.rules"), sem.store());
-
-var res = sem.sparql(" \n\
-PREFIX rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;  \n\
-PREFIX rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt; \n\
-PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; \n\
-PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt; \n\
-PREFIX wb:	&lt;http://wb.com/props#&gt; \n\
-PREFIX si:	&lt;http://si.gov/si:&gt; \n\
-PREFIX dbpedia-res: &lt;http://dbpedia.org/resource/&gt; \n\
-PREFIX dbpedia-ont: &lt;http://dbpedia.org/ontology/&gt; \n\
- \n\
-SELECT ?s ?p \n\
-WHERE  \n\
-{  \n\
-     ?s ?p &lt;http://dbpedia.org/ontology/NewYork&gt; \n\
-} \n\
-",[],[],store);
-
-var resArray = res.toArray();
-var resStr = res.toString();
-
-xdmp.log(resStr);
-xdmp.setResponseContentType("text/html");
-resArray;</query></workspace></export>
+}</query><query name="ctsTriples" focus="false" active="true" content-source="as:12797409928459395502:" mode="xquery">cts:search(cts:triples(), cts:word-query("Jackman"))</query></workspace></export>
