@@ -77,7 +77,7 @@ Add Contributor Program: <input type="checkbox" ng-model="addContributorProgram"
   <div  class="row">
     <div class="col-sm-2"></div>
     <h2 class="col-sm-10">Enrich Content With Brand Info</h2>
-    <center><div class="col-sm-10">(e.g. Scene = Coffe Shop Scene, Logo = Starbucks)</div></center>
+    <center><div class="col-sm-10">(e.g. Scene = Coffe Shop Scene, Brand = Starbucks Logo)</div></center>
   </div>
   <form class="form-horizontal">
     <div class="form-group">
@@ -89,11 +89,11 @@ Add Contributor Program: <input type="checkbox" ng-model="addContributorProgram"
     <div class="form-group">
       
       <div class="col-sm-10">
-        <input type="text" ng-if="brand" ng-show="false" ng-model="model.triple.predicate" ng-init="model.triple.predicate='hasLogo'" ></input>
+        <input type="text" ng-if="brand" ng-show="false" ng-model="model.triple.predicate" ng-init="model.triple.predicate='hasBrand'" ></input>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">Logo</label>
+      <label class="col-sm-2 control-label">Brand</label>
       <div class="col-sm-10">
         <input type="text" class="form-control" ng-model="model.triple.object" >
       </div>
@@ -178,8 +178,8 @@ Add Contributor Program: <input type="checkbox" ng-model="addContributorProgram"
  <div ng-if="addBrandProgram">
   <div  class="row">
     <div class="col-sm-2"></div>
-    <h2 class="col-sm-10">Add Corporate Brand Program</h2>
-    <center><div class="col-sm-10">(e.g. Corporation = Starbucks, Brand Program = Partner Program)</div></center>
+    <h2 class="col-sm-10">Add Corporate Program</h2>
+    <center><div class="col-sm-10">(e.g. Corporation = Starbucks,  Program = Brand Program)</div></center>
   </div>
   <form class="form-horizontal">
     <div class="form-group">
@@ -191,11 +191,11 @@ Add Contributor Program: <input type="checkbox" ng-model="addContributorProgram"
     <div class="form-group">
       
       <div class="col-sm-10">
-        <input type="text" ng-if="addBrandProgram" ng-show="false" ng-model="model.triple.predicate" ng-init="model.triple.predicate='<http://corp.com/partner:hasProgram>'" ></input>
+        <input type="text" ng-if="addBrandProgram" ng-show="false" ng-model="model.triple.predicate" ng-init="model.triple.predicate='<http://corp.com/partner:hasBrandProgram>'" ></input>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">Brand Program</label>
+      <label class="col-sm-2 control-label">Program</label>
       <div class="col-sm-10">
         <input type="text" class="form-control" ng-model="model.triple.object" >
       </div>

@@ -2558,7 +2558,7 @@ declare namespace html = "http://www.w3.org/1999/xhtml";
 
 let $uris := fn:collection("tweetsSentiments")/xdmp:node-uri(.)
 for $i in $uris
-return $i</query><query name="LoadCustomerRule3" focus="true" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
+return $i</query><query name="LoadCustomerRule3" focus="false" active="true" content-source="14907809695893881995:0:Apps" mode="xquery">xquery version "1.0-ml";
 xdmp:document-insert(
 '/rules/incentives.rules',
 text{
@@ -2674,6 +2674,16 @@ rule "has Coke Partner Program" CONSTRUCT {
 
 }
 
+rule "has Starbucks Brand Program" CONSTRUCT {
+?f &lt;http://corp.com/partner:inBrandProgram&gt; "Starbucks_Brand_Program"
+} {
+
+?s rdfs:domain &lt;http://wb.com/ontology/Starbucks_Brand&gt; .
+?f &lt;http://wb.com/props#hasBrand&gt; ?s .
+&lt;http://corp.com/corp:Starbucks&gt; &lt;http://corp.com/partner:hasBrandProgram&gt; "Starbucks_Brand_Program"
+
+}
+
 rule "has Starbucks SportsLifeStyle Program" CONSTRUCT {
 ?f &lt;http://corp.com/partner:inLifeStyleProgram&gt; "Starbucks_SportsLifeStyle_Program"
 } {
@@ -2724,7 +2734,7 @@ rule "in Shrek contributor Program" CONSTRUCT {
 '
 }
 )
-</query><query name="LoadOntology" focus="false" active="true" content-source="as:9446926577974576079:" mode="sparql-update">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
+</query><query name="LoadOntology" focus="true" active="true" content-source="as:9446926577974576079:" mode="sparql-update">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; 
 PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
 PREFIX dbpedia-owl:	&lt;http://dbpedia.org/ontology/&gt; 
 PREFIX prov:	&lt;http://www.w3.org/ns/prov#&gt;
@@ -2747,6 +2757,9 @@ PREFIX dbpedia-ont: &lt;http://dbpedia.org/ontology/&gt;
 ## insert some ontology data into http://marklogic.com/semantics/mm/movies-1
 INSERT DATA 
 { 
+&lt;http://corp.com/corp:Starbucks_Logo&gt; rdfs:domain &lt;http://wb.com/ontology/Starbucks_Brand&gt; .
+&lt;http://corp.com/corp:Starbucks_Mermaid&gt; rdfs:domain &lt;http://wb.com/ontology/Starbucks_Brand&gt; .
+&lt;http://corp.com/corp:Starbucks_Cups&gt; rdfs:domain &lt;http://wb.com/ontology/Starbucks_Brand&gt; .
 &lt;http://corp.com/corp:TheMartian_CoWriter&gt;  rdfs:domain &lt;http://corp.com/corp:The_Martian_Contributor&gt; .  
 &lt;http://corp.com/corp:TheMartian_Extra&gt;  rdfs:domain &lt;http://corp.com/corp:The_Martian_Contributor&gt; .
 &lt;http://corp.com/corp:Shrek_CoWriter&gt;  rdfs:domain &lt;http://corp.com/corp:Shrek_Contributor&gt; .  
@@ -2837,4 +2850,4 @@ dbpedia-owl:producer	rdfs:range	dbpedia-owl:Agent .
 &lt;http://dbpedia.org/ontology/data/definitions.jsonld&gt;	ns2:describes	dbpedia-owl:Agent .
 dbpedia-owl:foundedBy	rdfs:range	dbpedia-owl:Agent .
 dbpedia-owl:honours	rdfs:domain	dbpedia-owl:Agent .
-}</query><query name="ctsTriples" focus="false" active="true" content-source="as:12797409928459395502:" mode="xquery">cts:search(cts:triples(), cts:word-query("Jackman"))</query></workspace></export>
+}</query><query name="ctsTriples" focus="false" active="true" content-source="as:12797409928459395502:" mode="xquery">cts:triples();</query></workspace></export>

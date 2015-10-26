@@ -19,11 +19,11 @@ if ((predicate.indexOf("TaxIncentive") > -1) || (predicate.indexOf("Program") > 
     var params = {"subject": sem.iri(subTax), "predicate": sem.iri("http://si.gov/si:hasTaxIncentives"), "object": objTax};
 
   }
-  else if (predicate.indexOf("hasProgram") > -1){
+  else if (predicate.indexOf("hasBrandProgram") > -1){
     //In next 2 lines finance guy will enter say "Starbucks"(no quotes) in subject and "Partner Program" for object
     var subBrand = "http://corp.com/corp:" + fn.replace (xdmp.getRequestField("subject"), ' ', '');
     var objBrand = fn.replace(xdmp.getRequestField("subject"), ' ', '_') + "_" + fn.replace(xdmp.getRequestField("object"), ' ', '_');
-    var params = {"subject": sem.iri(subBrand), "predicate": sem.iri("http://corp.com/partner:hasProgram"), "object": objBrand};
+    var params = {"subject": sem.iri(subBrand), "predicate": sem.iri("http://corp.com/partner:hasBrandProgram"), "object": objBrand};
   }
   else if (predicate.indexOf("hasLifeStyleProgram") > -1){
     //In next 2 lines finance guy will enter say "Starbucks"(no quotes) in subject and "SportsLifeStyle Program" for object
@@ -58,7 +58,7 @@ xdmp.log("Got triple info and inserting subject = " + subject + " predicate = " 
 
   if (predicate.indexOf("location") > -1)
     var aTriple = sem.triple(sem.iri("http://dbpedia.org/resource/" + subject), sem.iri("http://wb.com/props#" + predicate), sem.iri("http://dbpedia.org/ontology/" + object));
-  else if (predicate.indexOf("hasLogo") > -1)
+  else if (predicate.indexOf("hasBrand") > -1)
     var aTriple = sem.triple(sem.iri("http://wb.com/props#" + subject), sem.iri("http://wb.com/props#" + predicate), sem.iri("http://corp.com/corp:" + object));
   else if (predicate.indexOf("hasLifeStyle") > -1)
     var aTriple = sem.triple(sem.iri("http://wb.com/props#" + subject), sem.iri("http://wb.com/props#" + predicate), sem.iri("http://corp.com/corp:" + object));
