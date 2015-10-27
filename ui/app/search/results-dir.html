@@ -8,7 +8,9 @@
   <div><a ng-href="http://localhost:7020/v1/documents?uri={{result.uri}}&format=json" target="_BLANK">src</a></div>
   <div class="matches">
     <div ng-repeat="match in result.matches">
-      <div ng-repeat="text in match['match-text']">{{text | decode}}</div>
+      <div ng-repeat="text in match['match-text']">
+       {{text | decode}}
+      </div>
     </div>
   </div>
  </div>

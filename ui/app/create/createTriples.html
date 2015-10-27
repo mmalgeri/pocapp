@@ -2,7 +2,7 @@
 Location: <input type="checkbox" ng-model="location" >&emsp;&emsp;&emsp;&emsp;Add State Incentive: <input type="checkbox" ng-model="addIncentive" ><BR>
 LifeStyle: <input type="checkbox" ng-model="lifeStyle" >&emsp;&emsp;&emsp;&emsp;Add LifeStyle Program: <input type="checkbox" ng-model="addLifeStyleProgram" ><BR>
 Brand: <input type="checkbox" ng-model="brand" >&emsp;&emsp;&emsp;&emsp;&emsp;Add Brand Program: <input type="checkbox" ng-model="addBrandProgram" ><BR>
-Contributor: <input type="checkbox" ng-model="contributor" >&emsp;&emsp;&emsp;
+Rights: <input type="checkbox" ng-model="contributor" >&emsp;&emsp;&emsp;
 Add Contributor Program: <input type="checkbox" ng-model="addContributorProgram" >
 <br/>
 
@@ -110,8 +110,8 @@ Add Contributor Program: <input type="checkbox" ng-model="addContributorProgram"
  <div ng-if="contributor">
   <div  class="row">
     <div class="col-sm-2"></div>
-    <h2 class="col-sm-10">Enrich Content With Contributor Info</h2>
-    <center><div class="col-sm-10">(e.g. Person = Jane Smith, Contribution = TheMartian CoWriter)</div></center>
+    <h2 class="col-sm-10">Enrich Content With Rights Info</h2>
+    <center><div class="col-sm-10">(e.g. Person = Jane Smith, Rights = TheMartian CoWriter)</div></center>
   </div>
   <form class="form-horizontal">
     <div class="form-group">
@@ -127,7 +127,7 @@ Add Contributor Program: <input type="checkbox" ng-model="addContributorProgram"
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">Contribution</label>
+      <label class="col-sm-2 control-label">Rights</label>
       <div class="col-sm-10">
         <input type="text" class="form-control" ng-model="model.triple.object" >
       </div>
