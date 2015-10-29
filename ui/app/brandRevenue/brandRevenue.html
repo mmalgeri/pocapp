@@ -10,6 +10,12 @@
     </div>
   </form>
 
-  <div ng-repeat='d in model.detail.data'>{{d.s.toString().slice(20,50)}} <B>eligible for</B> {{d.o.toString()}} <BR><BR></div>
+  <div ng-repeat='d in model.detail.data'>{{d.s.toString().slice(20,50)}} <B>eligible for</B> 
+
+    <span ng-if="d.l.toString().indexOf('Logo') > -1"> {{d.l.toString().slice(21)}}_Program <BR><BR></span>
+
+    <span ng-if="d.l.toString().indexOf('Logo') < 0">  {{d.o.toString()}} <BR><BR> </span>
+
+  </div>
 
 </div>

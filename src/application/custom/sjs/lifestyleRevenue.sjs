@@ -10,10 +10,11 @@ PREFIX wb:	<http://wb.com/props#> \n\
 PREFIX corp:	<http://corp.com/corp:> \n\
 PREFIX partner: <http://corp.com/partner:> \n\
  \n\
-SELECT ?s ?o \n\
+SELECT ?s ?o ?l \n\
 WHERE  \n\
 { \n\
-    ?s partner:inLifeStyleProgram  ?o  \n\
+    ?s partner:inLifeStyleProgram  ?o . \n\
+    ?s <http://wb.com/props#hasLifeStyle>  ?l \n\
 } \n\
 ",[],[],store);
 
