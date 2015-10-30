@@ -12,7 +12,7 @@
 
   <div ng-repeat='d in model.detail.data'>{{d.s.toString().slice(20,50)}} <B>eligible for</B>  
 
-    <span ng-if="d.l.toString().indexOf('Golf') > -1">{{d.l.toString().slice(21)}}_LifeStyle_Program <BR><BR></span>
+    <span ng-if="d.l.toString().indexOf('Golf') > -1">Tesla_{{d.l.toString().slice(21)}}_LifeStyle_Program <BR><BR></span>
 
     <span ng-if="d.l.toString().indexOf('Golfing') < 0">  {{d.o.toString()}} <BR><BR> </span>
 
